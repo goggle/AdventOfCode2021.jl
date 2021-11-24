@@ -3,7 +3,7 @@ module AdventOfCode2021
 using BenchmarkTools
 using Printf
 
-solvedDays = []
+solvedDays = [1]
 
 # Include the source files:
 for day in solvedDays
