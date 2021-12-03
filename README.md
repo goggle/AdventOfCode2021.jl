@@ -11,6 +11,7 @@ This Julia package contains my solutions for [Advent of Code 2021](https://adven
 |----:|:-------:|-----:|-----------------:|:------:|
 | 1 | [:white_check_mark:](https://adventofcode.com/2021/day/1) | 252.909 μs | 238.33 KiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day01.jl) |
 | 2 | [:white_check_mark:](https://adventofcode.com/2021/day/2) | 377.261 μs | 236.02 KiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day02.jl) |
+| 3 | [:white_check_mark:](https://adventofcode.com/2021/day/3) | 311.636 μs | 265.66 KiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day03.jl) |
 
 
 The benchmarks have been measured on this machine:
