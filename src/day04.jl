@@ -25,7 +25,7 @@ function parse_input(input::AbstractString)
     return numbers, boards
 end
 
-function won(board::Matrix{Int}, numbers::Vector{Int})
+function won(board::Matrix{Int}, numbers::SubArray{Int, 1, Vector{Int}, Tuple{UnitRange{Int}}, true})
     n, m = size(board)
     for i = 1:n
         all(x -> x ∈ numbers, board[i,:]) && return true
@@ -46,14 +46,14 @@ function solve(numbers::Vector{Int}, boards::Vector{Matrix{Int}})
             islast = true
         end
         for (i, board) in enumerate(boards)
-            if !wonboards[i] && won(board, numbers[1:n])
+            if !wonboards[i] && won(board, @view(numbers[1:n]))
                 wonboards[i] = true
                 if !p1done
-                    p1 = sum(board[findall(x -> x ∉ numbers[1:n], board)]) * numbers[n]
+                    p1 = sum(board[findall(x -> x ∉ @view(numbers[1:n]), board)]) * numbers[n]
                     p1done = true
                 end
                 if islast
-                    p2 = sum(board[findall(x -> x ∉ numbers[1:n], board)]) * numbers[n]
+                    p2 = sum(board[findall(x -> x ∉ @view(numbers[1:n]), board)]) * numbers[n]
                     return [p1, p2]
                 end
             end
