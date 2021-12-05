@@ -37,10 +37,10 @@ function won(board::Matrix{Int}, numbers::SubArray{Int, 1, Vector{Int}, Tuple{Un
 end
 
 function solve(numbers::Vector{Int}, boards::Vector{Matrix{Int}})
-    n = 5
     wonboards = zeros(Bool, length(boards))
     p1done, islast = false, false
     p1, p2 = 0, 0
+    n = minimum.(size.(boards)) |> minimum
     while n <= length(numbers)
         if sum(wonboards) == length(wonboards) - 1
             islast = true
