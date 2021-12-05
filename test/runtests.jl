@@ -49,3 +49,18 @@ end
     @test AdventOfCode2021.Day04.day04(sample) == [4512, 1924]
     @test AdventOfCode2021.Day04.day04() == [67716, 1830]
 end
+
+@testset "Day 5" begin
+    sample = "0,9 -> 5,9\n" *
+             "8,0 -> 0,8\n" *
+             "9,4 -> 3,4\n" *
+             "2,2 -> 2,1\n" *
+             "7,0 -> 7,4\n" *
+             "6,4 -> 2,0\n" *
+             "0,9 -> 2,9\n" *
+             "3,4 -> 1,4\n" *
+             "0,0 -> 8,8\n" *
+             "5,5 -> 8,2\n"
+    @test AdventOfCode2021.Day05.day05(sample) == [5, 12]
+    @test AdventOfCode2021.Day05.day05() == [5835, 17013]
+end
