@@ -20,8 +20,8 @@ end
 
 function solve(starts, ends)
     n, m = (maximum([maximum(a -> a[i], x) for x in (starts, ends)]) for i = 1:2)
-    grid = OffsetArray(zeros(Int, n+1, m+1), 0:n, 0:m)
-    gridp2 = OffsetArray(zeros(Int, n+1, m+1), 0:n, 0:m)
+    grid = OffsetArray(zeros(UInt8, n+1, m+1), 0:n, 0:m)
+    gridp2 = OffsetArray(zeros(UInt8, n+1, m+1), 0:n, 0:m)
     for (s, e) in zip(starts, ends)
         if s[1] == e[1]
             y1, y2 = minmax(s[2], e[2])
