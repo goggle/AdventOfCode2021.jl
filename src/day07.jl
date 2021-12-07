@@ -4,26 +4,11 @@ using AdventOfCode2021
 
 function day07(input::String = readInput(joinpath(@__DIR__, "..", "data", "day07.txt")))
     positions = parse.(Int, split(input, ','))
-    solutions = [0, 0]
-    for (i, fac) in enumerate((costp1, costp2))
-        min = cost(positions, 0, fac)
-        for pos ∈ 1:maximum(positions)
-            c = cost(positions, pos, fac)
-            if c < min
-                min = c
-            end
-        end
-        solutions[i] = min
-    end
-    return solutions
+    return [minimum(cost(positions, pos, part) for pos = minimum(positions):maximum(positions)) for part in (costp1, costp2)]
 end
 
 function cost(positions::Vector{Int}, final::Int, costp)
-    total = 0
-    for pos in positions
-        total += costp(abs(pos - final))
-    end
-    return total
+    return sum(costp(abs(pos - final)) for pos in positions)
 end
 
 costp1(x::Int) = x
