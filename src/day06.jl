@@ -9,16 +9,15 @@ function day06(input::String = readInput(joinpath(@__DIR__, "..", "data", "day06
 end
 
 function grow!(lookup::Matrix{Int}, state::Int, daysleft::Int)
-    daysleft - state <= 0 && return 1
-    parrent = lookup[6, daysleft - state]
-    if parrent == 0
-        lookup[6, daysleft - state] = parrent = grow!(lookup, 6, daysleft - state - 1)
+    newdaysleft = daysleft - state
+    newdaysleft <= 0 && return 1
+    if lookup[6, newdaysleft] == 0
+        lookup[6, newdaysleft] = grow!(lookup, 6, newdaysleft - 1)
     end
-    child = lookup[8, daysleft - state]
-    if child == 0
-        lookup[8, daysleft - state] = child = grow!(lookup, 8, daysleft - state - 1)
+    if lookup[8, newdaysleft] == 0
+        lookup[8, newdaysleft] = grow!(lookup, 8, newdaysleft - 1)
     end
-    return parrent + child
+    return lookup[6, newdaysleft] + lookup[8, newdaysleft]
 end
 
 end # module
