@@ -29,7 +29,7 @@ function part2(signals::Vector{Vector{Int}}, outputs::Vector{Vector{Int}})
         for permutation in Combinatorics.permutations(1:7)
             passed = true
             for code in codes
-                if decode.(code; permutation=permutation) < 0
+                if decode(code; permutation=permutation) < 0
                     passed = false
                     break
                 end

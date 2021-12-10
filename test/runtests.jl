@@ -88,4 +88,6 @@ end
              "bdfegc cbegaf gecbf dfcage bdacg ed bedf ced adcbefg gebcd |  ed bcgafe cdgba cbgef\n" *
              "egadfb cdbfeg cegd fecab cgb gbdefca cg fgcdab egfdb bfceg |  gbdfcae bgc cg cgb\n" *
              "gcafb gcf dcaebfg ecagb gf abcdeg gaef cafbge fdbac fegbdc |  fgae cfgab fg bagce\n"
+    @test AdventOfCode2021.Day08.day08(sample) == [26, 61229]
+    @test AdventOfCode2021.Day08.day08() == [392, 1004688]
 end
