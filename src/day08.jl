@@ -1,7 +1,6 @@
 module Day08
 
 using AdventOfCode2021
-using Combinatorics
 
 function day08(input::String = readInput(joinpath(@__DIR__, "..", "data", "day08.txt")))
     signals, outputs = parse_input(input)
@@ -25,21 +24,38 @@ end
 function part2(signals::Vector{Vector{Int}}, outputs::Vector{Vector{Int}})
     p2 = 0
     for (signs, outs) in zip(signals, outputs)
-        codes = vcat(signs, outs)
-        for permutation in Combinatorics.permutations(1:7)
-            passed = true
-            for code in codes
-                if decode(code; permutation=permutation) < 0
-                    passed = false
-                    break
-                end
+        for permutation in find_permutations(signs)
+            if all(decode.(signs, permutation=permutation) .>= 0)
+                p2 += decode.(outs; permutation=permutation) .* (1000, 100, 10, 1) |> sum
+                break
             end
-            !passed && continue
-            p2 += decode.(outs; permutation=permutation) .* (1000, 100, 10, 1) |> sum
-            break
         end
     end
     return p2
+end
+
+function find_permutations(signals::Vector{Int})
+    # Calculate the sum of the bits at position n for n = 1:7.
+    # By comparison of the result of the original encoding, we know that
+    # position of 4 ↦ 3
+    # position of 6 ↦ 6
+    # position of 9 ↦ 2
+    # positions of 7 ↦ 1 or 4
+    # positions of 8 ↦ 5 or 7
+    # This gives 4 possible permutations.
+    sdigs = (digits.(signals, base=2, pad=7)) |> sum
+    four = findfirst(x -> x == 4, sdigs)
+    six = findfirst(x -> x == 6, sdigs)
+    nine = findfirst(x -> x == 9, sdigs)
+    seven = findall(x -> x == 7, sdigs)
+    eight = findall(x -> x == 8, sdigs)
+    permutations = [zeros(Int, 7) for _ = 1:4]
+    for (i, s, e) = zip(1:4, ((1, 4), (1, 4), (4, 1), (4, 1)), ((5, 7), (7, 5), (5, 7), (7, 5)))
+        permutations[i][[four, six, nine]] .= 3, 6, 2
+        permutations[i][seven] .= s
+        permutations[i][eight] .= e
+    end
+    return permutations
 end
 
 function decode(n::Int;  permutation=1:7)
