@@ -91,3 +91,13 @@ end
     @test AdventOfCode2021.Day08.day08(sample) == [26, 61229]
     @test AdventOfCode2021.Day08.day08() == [392, 1004688]
 end
+
+@testset "Day 9" begin
+    sample = "2199943210\n" *
+             "3987894921\n" *
+             "9856789892\n" *
+             "8767896789\n" *
+             "9899965678\n"
+    @test AdventOfCode2021.Day09.day09(sample) == [15, 1134]
+    @test AdventOfCode2021.Day09.day09() == [486, 1059300]
+end
