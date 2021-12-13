@@ -3,7 +3,7 @@ module AdventOfCode2021
 using BenchmarkTools
 using Printf
 
-solvedDays = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+solvedDays = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
 
 # Include the source files:
 for day in solvedDays
@@ -68,5 +68,20 @@ function _to_markdown_table(bresults)
     end
     return join(lines, "\n")
 end
+
+# Utility function to decode images:
+function generate_image(image)
+    block = '\u2588'
+    empty = ' '
+    output = ""
+    for i = 1:size(image, 2)
+        row = join(image[:, i])
+        row = replace(row, "#" => block)
+        row = replace(row, "." => empty)
+        output *= row * "\n"
+    end
+    return output
+end
+export generate_image
 
 end # module
