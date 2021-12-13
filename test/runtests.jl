@@ -131,3 +131,45 @@ end
     @test AdventOfCode2021.Day11.day11(sample) == [1656, 195]
     @test AdventOfCode2021.Day11.day11() == [1649, 256]
 end
+
+@testset "Day 12" begin
+    sample1 = "start-A\n" *
+              "start-b\n" *
+              "A-c\n" *
+              "A-b\n" *
+              "b-d\n" *
+              "A-end\n" *
+              "b-end\n"
+    sample2 = "dc-end\n" *
+              "HN-start\n" *
+              "start-kj\n" *
+              "dc-start\n" *
+              "dc-HN\n" *
+              "LN-dc\n" *
+              "HN-end\n" *
+              "kj-sa\n" *
+              "kj-HN\n" *
+              "kj-dc\n"
+    sample3 = "fs-end\n" *
+              "he-DX\n" *
+              "fs-he\n" *
+              "start-DX\n" *
+              "pj-DX\n" *
+              "end-zg\n" *
+              "zg-sl\n" *
+              "zg-pj\n" *
+              "pj-he\n" *
+              "RW-he\n" *
+              "fs-DX\n" *
+              "pj-RW\n" *
+              "zg-RW\n" *
+              "start-pj\n" *
+              "he-WI\n" *
+              "zg-he\n" *
+              "pj-fs\n" *
+              "start-RW\n"
+    @test AdventOfCode2021.Day12.day12(sample1) == [10, 36]
+    @test AdventOfCode2021.Day12.day12(sample2) == [19, 103]
+    @test AdventOfCode2021.Day12.day12(sample3) == [226, 3509]
+    @test AdventOfCode2021.Day12.day12() == [4167, 98441]
+end
