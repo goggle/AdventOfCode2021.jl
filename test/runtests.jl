@@ -210,3 +210,33 @@ end
                   "█     ███ █  █  ██  █  █ ███  ████  ███\n"
     @test AdventOfCode2021.Day13.day13() == [687, expected_p2]
 end
+
+@testset "Day 14" begin
+    toysample = "ABBA\n" *
+                "\n" *
+                "AB -> A\n" *
+                "BA -> B\n" *
+                "BB -> B\n" *
+                "AA -> A\n"
+    sample = "NNCB\n" *
+             "\n" *
+             "CH -> B\n" *
+             "HH -> N\n" *
+             "CB -> H\n" *
+             "NH -> C\n" *
+             "HB -> C\n" *
+             "HC -> B\n" *
+             "HN -> C\n" *
+             "NN -> C\n" *
+             "BH -> H\n" *
+             "NC -> B\n" *
+             "NB -> B\n" *
+             "BN -> B\n" *
+             "BB -> N\n" *
+             "BC -> B\n" *
+             "CC -> N\n" *
+             "CN -> C\n"
+    @test AdventOfCode2021.Day14.day14(toysample) == [1023, 1099511627775]
+    @test AdventOfCode2021.Day14.day14(sample) == [1588, 2188189693529]
+    @test AdventOfCode2021.Day14.day14() == [3406, 3941782230241]
+end
