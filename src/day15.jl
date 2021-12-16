@@ -18,7 +18,7 @@ function solve(riskmap::Matrix{Int8})
     visitedmap = zeros(Bool, size(riskmap)...)
     Q = PriorityQueue{CartesianIndex{2}, Int}()
     enqueue!(Q, CartesianIndex(1,1), 0)
-    while length(Q) > 0
+    while !isempty(Q)
         current = dequeue!(Q)
         visitedmap[current] = true
         for neigh in (current + x for x in (CartesianIndex(1,0), CartesianIndex(-1, 0), CartesianIndex(0, 1), CartesianIndex(0, -1)))
