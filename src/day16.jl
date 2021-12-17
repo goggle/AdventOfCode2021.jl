@@ -17,7 +17,7 @@ function day16(input::String = readInput(joinpath(@__DIR__, "..", "data", "day16
 end
 
 function parse_packet!(packets::Vector{Packet}, inpbits::BitVector, i::Int)
-    (i > length(inpbits) || !any(inpbits[i:end])) && return i
+    (i > length(inpbits) || !any(@view inpbits[i:end])) && return i
     version = _to_int(inpbits[i:i+2])
     id = _to_int(inpbits[i+3:i+5])
     i += 6
