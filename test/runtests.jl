@@ -255,3 +255,31 @@ end
     @test AdventOfCode2021.Day15.day15(sample) == [40, 315]
     @test AdventOfCode2021.Day15.day15() == [698, 3022]
 end
+
+@testset "Day 16" begin
+    ssample1 = "8A004A801A8002F478"
+    ssample2 = "620080001611562C8802118E34"
+    ssample3 = "C0015000016115A2E0802F182340"
+    ssample4 = "A0016C880162017C3686B18A3D4780"
+    vsample1 = "C200B40A82"
+    vsample2 = "04005AC33890"
+    vsample3 = "880086C3E88112"
+    vsample4 = "CE00C43D881120"
+    vsample5 = "D8005AC2A8F0"
+    vsample6 = "F600BC2D8F"
+    vsample7 = "9C005AC2F8F0"
+    vsample8 = "9C0141080250320F1802104A08"
+    @test AdventOfCode2021.Day16.day16(ssample1) == [16, 15]
+    @test AdventOfCode2021.Day16.day16(ssample2) == [12, 46]
+    @test AdventOfCode2021.Day16.day16(ssample3) == [23, 46]
+    @test AdventOfCode2021.Day16.day16(ssample4) == [31, 54]
+    @test AdventOfCode2021.Day16.day16(vsample1) == [14, 3]
+    @test AdventOfCode2021.Day16.day16(vsample2) == [8, 54]
+    @test AdventOfCode2021.Day16.day16(vsample3) == [15, 7]
+    @test AdventOfCode2021.Day16.day16(vsample4) == [11, 9]
+    @test AdventOfCode2021.Day16.day16(vsample5) == [13, 1]
+    @test AdventOfCode2021.Day16.day16(vsample6) == [19, 0]
+    @test AdventOfCode2021.Day16.day16(vsample7) == [16, 0]
+    @test AdventOfCode2021.Day16.day16(vsample8) == [20, 1]
+    @test AdventOfCode2021.Day16.day16() == [938, 1495959086337]
+end
