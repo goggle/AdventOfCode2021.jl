@@ -283,3 +283,9 @@ end
     @test AdventOfCode2021.Day16.day16(vsample8) == [20, 1]
     @test AdventOfCode2021.Day16.day16() == [938, 1495959086337]
 end
+
+@testset "Day 17" begin
+    sample = "target area: x=20..30, y=-10..-5\n"
+    @test AdventOfCode2021.Day17.day17(sample) == [45, 112]
+    @test AdventOfCode2021.Day17.day17() == [6555, 4973]
+end
