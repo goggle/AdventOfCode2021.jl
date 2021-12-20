@@ -327,18 +327,20 @@ end
     AdventOfCode2021.Day18.reduce!(explsplit)
     @test explsplit == [[[[0,7],4],[[7,8],[6,0]]],[8,1]]
 
+    parse_input = AdventOfCode2021.Day18.parse_input
+
     sample1 = "[1,1]\n" *
               "[2,2]\n" *
               "[3,3]\n" *
               "[4,4]\n"
-    @test AdventOfCode2021.Day18.build_sum(sample1) == [[[[1,1],[2,2]],[3,3]],[4,4]]
+    @test AdventOfCode2021.Day18.build_sum(sample1 |> parse_input) == [[[[1,1],[2,2]],[3,3]],[4,4]]
 
     sample2 = "[1,1]\n" *
               "[2,2]\n" *
               "[3,3]\n" *
               "[4,4]\n" *
               "[5,5]\n"
-    @test AdventOfCode2021.Day18.build_sum(sample2) == [[[[3,0],[5,3]],[4,4]],[5,5]]
+    @test AdventOfCode2021.Day18.build_sum(sample2 |> parse_input) == [[[[3,0],[5,3]],[4,4]],[5,5]]
 
     sample3 = "[1,1]\n" *
               "[2,2]\n" *
@@ -346,7 +348,7 @@ end
               "[4,4]\n" *
               "[5,5]\n" *
               "[6,6]\n"
-    @test AdventOfCode2021.Day18.build_sum(sample3) == [[[[5,0],[7,4]],[5,5]],[6,6]]
+    @test AdventOfCode2021.Day18.build_sum(sample3 |> parse_input) == [[[[5,0],[7,4]],[5,5]],[6,6]]
 
     sample4 = "[[[0,[4,5]],[0,0]],[[[4,5],[2,6]],[9,5]]]\n" *
               "[7,[[[3,7],[4,3]],[[6,3],[8,8]]]]\n" *
@@ -358,7 +360,7 @@ end
               "[1,[[[9,3],9],[[9,0],[0,7]]]]\n" *
               "[[[5,[7,4]],7],1]\n" *
               "[[[[4,2],2],6],[8,7]]\n"
-    @test AdventOfCode2021.Day18.build_sum(sample4) == [[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]
+    @test AdventOfCode2021.Day18.build_sum(sample4 |> parse_input) == [[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]
 
     @test AdventOfCode2021.Day18.magnitude([[1,2],[[3,4],5]]) == 143
     @test AdventOfCode2021.Day18.magnitude([[[[0,7],4],[[7,8],[6,0]]],[8,1]]) == 1384
@@ -377,7 +379,7 @@ end
               "[[9,3],[[9,9],[6,[4,9]]]]\n" *
               "[[2,[[7,7],7]],[[5,8],[[9,3],[0,2]]]]\n" *
               "[[[[5,2],5],[8,[3,7]]],[[5,[7,5]],[4,4]]]\n"
-    sample5sum = AdventOfCode2021.Day18.build_sum(sample5)
+    sample5sum = AdventOfCode2021.Day18.build_sum(sample5 |> parse_input)
     @test sample5sum == [[[[6,6],[7,6]],[[7,7],[7,0]]],[[[7,7],[7,7]],[[7,8],[9,9]]]]
     @test AdventOfCode2021.Day18.magnitude(sample5sum) == 4140
 
@@ -391,5 +393,7 @@ end
               "[[9,3],[[9,9],[6,[4,9]]]]\n" *
               "[[2,[[7,7],7]],[[5,8],[[9,3],[0,2]]]]\n" *
               "[[[[5,2],5],[8,[3,7]]],[[5,[7,5]],[4,4]]]\n"
-    @test AdventOfCode2021.Day18.part2(sample6) == 3993
+    @test AdventOfCode2021.Day18.day18(sample6) == [4140, 3993]
+
+    @test AdventOfCode2021.Day18.day18() == [4008, 4667]
 end
