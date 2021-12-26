@@ -4,7 +4,6 @@ using AdventOfCode2021
 
 function day21(input::String = readInput(joinpath(@__DIR__, "..", "data", "day21.txt")))
     positions = parse.(Int, map(x -> x[end], split.(split(rstrip(input), "\n"))))
-    # return part2(positions)
     return [part1(positions), part2(positions)]
 end
 
