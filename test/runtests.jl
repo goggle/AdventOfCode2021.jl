@@ -556,3 +556,10 @@ end
     @test AdventOfCode2021.Day20.day20(sample) == [35, 3351]
     @test AdventOfCode2021.Day20.day20() == [5432, 16016]
 end
+
+@testset "Day 21" begin
+    sample = "Player 1 starting position: 4\n" *
+             "Player 2 starting position: 8\n"
+    @test AdventOfCode2021.Day21.day21(sample) == [739785, 444356092776315]
+    @test AdventOfCode2021.Day21.day21() == [506466, 632979211251440]
+end
