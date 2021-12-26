@@ -6,58 +6,40 @@ using LinearAlgebra
 function day19(input::String = readInput(joinpath(@__DIR__, "..", "data", "day19.txt")))
     data = parse_input(input)
     rotations = generate_rotations()
-    # M = Matrix{Tuple{Vector{Int}, Int}}()
+    overlapping_neighbours = find_neighbours(data)
     d = Dict{Int, Dict{Int, Tuple{Vector{Int}, Int}}}()
     for i = 1:length(data)
         d[i] = Dict{Int, Tuple{Vector{Int}, Int}}()
     end
     for i = 1:length(data)
-        # d[i] = Dict{Int, Tuple{Vector{Int}, Int}}()
         for j = i + 1:length(data)
-            # if !haskey(d[j], i)
-            #     d[j] = Dict{Int, Tuple{Vector{Int}, Int}}()
-            # end
-            # println("i = $i, j = $j")
-            res = compare(data[i], data[j], rotations)
-            # println(res)
-            if res !== nothing
-                scanner, rotind = res
-                # println("scanner: $scanner, rotind: $rotind")
-                d[i][j] = res
-                d[j][i] = (-scanner, findfirst(x -> x == Int.(inv(rotations[rotind])), rotations))
+            if overlapping_neighbours[i,j]
+                d[i][j] = compare(data[i], data[j], rotations)
+                d[j][i] = compare(data[j], data[i], rotations)
             end
-            # if res !== nothing
-            #     return res
-            # end
         end
-    end
-    scanners = Set{Vector{Int}}()
-    for entry in d[1]
-        push!(scanners, entry[2][1])
-    end
-    for k = 2:length(data)
-        path = find_path(k, d)
-        rot = [1 0 0 ; 0 1 0; 0 0 1]
-        s = [0, 0, 0]
-        println("path = $path")
-        for i = 1:length(path) - 1
-            # for j = (i+1):length(path)
-            pi = path[i]
-            pj = path[i+1]
-            println("pi = $pi, pj = $pj")
-            s += rot * d[pi][pj][1]
-            rot = d[pi][pj][2] * rot
-            # end
-        end
-        push!(scanners, s)
-        
-        # println(path)
     end
 
-    # return scanners
-    
-    # return find_path(4, d)
-    return d
+    scanners = map_scanners(d, rotations)
+    beacons = Set{Vector{Int}}()
+
+    for (i, scannerdata) ∈ enumerate(data)
+        for relcoord ∈ eachcol(scannerdata)
+            push!(beacons, rotations[scanners[i][2]] * relcoord + scanners[i][1])
+        end
+    end
+    p1 = length(beacons)
+
+    scannerpositions = map(x -> x[1], values(scanners))
+    p2 = 0
+    for scannerpos ∈ scannerpositions
+        maxdist = map(x -> abs.(scannerpos - x) |> sum, scannerpositions) |> maximum
+        if maxdist > p2
+            p2 = maxdist
+        end
+    end
+
+    return [p1, p2]
 end
 
 function parse_input(input::String)
@@ -77,6 +59,30 @@ function parse_input(input::String)
     return data
 end
 
+function find_neighbours(data::Vector{Matrix})
+    # Checks which scanner pairs overlap by calculating he Manhatten distances
+    # of beacons within in each scanner
+    overlapping_neighbours = zeros(Bool, length(data), length(data))
+    distances = Vector{UpperTriangular{Int, Matrix{Int}}}(undef, length(data))
+    for (k, scannerdata) in enumerate(data)
+        dist = UpperTriangular(zeros(Int, size(scannerdata, 2), size(scannerdata, 2)))
+        for i = 1:size(scannerdata, 2)
+            for j = i+1:size(scannerdata, 2)
+                dist[i, j] = abs.(scannerdata[:,i] - scannerdata[:,j]) |> sum
+            end
+        end
+        distances[k] = dist
+    end
+    for i = 1:length(data)
+        for j = i + 1: length(data)
+            if length(intersect(distances[i], distances[j])) >= 66
+                overlapping_neighbours[i,j] = overlapping_neighbours[j,i] = true
+            end
+        end
+    end
+    return overlapping_neighbours
+end
+
 function generate_rotations()
     A = [0 0 -1; 0 1 0; 1 0 0]
     B = [1 0 0; 0 0 -1; 0 1 0]
@@ -85,6 +91,8 @@ function generate_rotations()
 end
 
 function compare(orig::Matrix{Int}, other::Matrix{Int}, rotations::Vector{Matrix{Int}})
+    # Compares two scanners. If they overlap, the position of the second scanner and
+    # the corresponding rotation index are returned.
     for r = 1:length(rotations)
         counts = Dict{Vector{Int}, Int}()
         tmp = Set{Vector{Int}}()
@@ -102,29 +110,36 @@ function compare(orig::Matrix{Int}, other::Matrix{Int}, rotations::Vector{Matrix
             end
         end
         if !isempty(counts) && maximum(counts)[2] >= 12
-            # println(counts)
             return maximum(counts)[1], r
         end
     end
-    # return false
-    # return tmp
 end
 
-function find_path(to::Int, d::Dict{Int, Dict{Int, Tuple{Vector{Int}, Int}}})
-    to == 1 && return Int[]
-    Q = [Int[1, x] for x in keys(d[1])]
-    while !isempty(Q)
-        path = popfirst!(Q)
-        # println(path)
-        path[end] == to && return path
-        for n ∈ keys(d[path[end]])
-            if n ∉ path
-                cp = copy(path)
-                push!(cp, n)
-                push!(Q, cp)
+function map_scanners(d::Dict{Int, Dict{Int, Tuple{Vector{Int}, Int}}}, rotations::Vector{Matrix{Int}})
+    scanners = Dict{Int, Tuple{Vector{Int}, Int}}()
+    scanners[1] = ([0, 0, 0], findfirst(x -> x == [1 0 0 ; 0 1 0 ; 0 0 1], rotations))
+    done = Set{Int}([1])
+    next = Int[]
+    for (s, (loc, rotind)) in d[1]
+        scanners[s] = (loc, rotind)
+        if s ∉ next
+            push!(next, s)
+            push!(done, s)
+        end
+    end
+    while !isempty(next)
+        j = popfirst!(next)
+        push!(done, j)
+        for (s, (loc, rotind)) in d[j]
+            scannerloc = scanners[j][1] + rotations[scanners[j][2]] * loc
+            scannerrotind = findfirst(x -> x == rotations[scanners[j][2]] * rotations[rotind], rotations)
+            scanners[s] = (scannerloc, scannerrotind)
+            if s ∉ next && s ∉ done
+                push!(next, s)
             end
         end
     end
+    return scanners
 end
 
 end # module

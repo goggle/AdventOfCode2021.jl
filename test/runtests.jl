@@ -535,4 +535,6 @@ end
              "891,-625,532\n" *
              "-652,-548,-490\n" *
              "30,-46,-14\n"
+    @test AdventOfCode2021.Day19.day19(sample) == [79, 3621]
+    @test AdventOfCode2021.Day19.day19() == [398, 10965]
 end
