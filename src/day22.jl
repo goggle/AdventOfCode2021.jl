@@ -8,7 +8,12 @@ struct Cube
 end
 
 function day22(input::String = readInput(joinpath(@__DIR__, "..", "data", "day22.txt")))
-    parse_input(input)
+    cubes = parse_input(input)
+    cubelist = Cube[]
+    for instruction in cubes
+        instruction!(cubelist, instruction)
+    end
+    return [crop_volume.(cubelist) |> sum, volume.(cubelist) |> sum]
 end
 
 function parse_input(input::String)
@@ -19,12 +24,7 @@ function parse_input(input::String)
         on = (m.captures[1] == "on" ? true : false)
         push!(cubes, Cube(on, parse.(Int, m.captures[2:7]))) 
     end
-
-    cubelist = Cube[]
-    for instruction in cubes
-        instruction!(cubelist, instruction)
-    end
-    return cubelist
+    return cubes
 end
 
 function intersection(cube::Cube, other::Cube, onoff::Bool)
@@ -41,30 +41,24 @@ function volume(cube::Cube)
     return (cube.on ? 1 : -1) * (cube.data[2] - cube.data[1] + 1) * (cube.data[4] - cube.data[3] + 1) * (cube.data[6] - cube.data[5] + 1)
 end
 
+function crop_volume(cube::Cube)
+    intcube = intersection(cube, Cube(true, [-50, 50, -50, 50, -50, 50]), cube.on)
+    intcube == false && return 0
+    return volume(intcube)
+end
+
 function instruction!(cubes::Vector{Cube}, cube::Cube)
     add = Cube[]
+    for c in cubes
+        intcube = intersection(c, cube, !c.on)
+        if intcube != false
+            push!(add, intcube)
+        end
+    end
     if cube.on
-        for c in cubes
-            !c.on && continue
-            intcube = intersection(c, cube, false)
-            if intcube != false
-                push!(add, intcube)
-            end
-        end
         push!(add, cube)
-    else
-        for c in cubes
-            !c.on && continue
-            intcube = intersection(c, cube, false)
-            if intcube != false
-                push!(add, intcube)
-            end
-        end
     end
-
-    for c in add
-        push!(cubes, c)
-    end
+    push!(cubes, add...)
 end
 
 end # module
