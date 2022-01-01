@@ -31,7 +31,7 @@ This Julia package contains my solutions for [Advent of Code 2021](https://adven
 | 20 | [:white_check_mark:](https://adventofcode.com/2021/day/20) | 161.042 ms | 149.16 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day20.jl) |
 | 21 | [:white_check_mark:](https://adventofcode.com/2021/day/21) | 658.514 ms | 1.48 KiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day21.jl) |
 | 22 | [:white_check_mark:](https://adventofcode.com/2021/day/22) | 156.685 ms | 23.31 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day22.jl) |
-<!-- | 23 | [:white_check_mark:](https://adventofcode.com/2021/day/23) |  | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day23.jl) | -->
+| 23 | [:white_check_mark:](https://adventofcode.com/2021/day/23) | 2.404 s | 1.47 GiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day23.jl) |
 
 
 The benchmarks have been measured on this machine:

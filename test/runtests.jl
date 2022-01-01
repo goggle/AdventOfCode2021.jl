@@ -656,3 +656,13 @@ end
     @test AdventOfCode2021.Day22.day22(sample3) == [474140, 2758514936282235]
     @test AdventOfCode2021.Day22.day22() == [587097, 1359673068597669]
 end
+
+@testset "Day 23" begin
+    sample = "#############\n" *
+             "#...........#\n" *
+             "###B#C#B#D###\n" *
+             "  #A#D#C#A#\n" *
+             "  #########\n"
+    @test AdventOfCode2021.Day23.day23(sample) == [12521, 44169]
+    @test AdventOfCode2021.Day23.day23() == [18300, 50190]
+end
