@@ -111,25 +111,27 @@ function swap(state::State, hallwayind::Integer, roomnumber::Integer, roomind::I
     return State(hallway, rooms)
 end
 
-function heuristic(state::State)
-    total = 0
-    for room ∈ 1:4
-        positions = Int[]
-        push!(positions, findall(x -> x == room, state.hallway)...)
-        for ri ∈ 1:4
-            ri == room && continue
-            c = findall(x -> x == room, state.rooms[ri]) |> length
-            for _ ∈ 1:c
-                push!(positions, ri * 2 + 1)
-            end
-        end
-        entry = room * 2 + 1
-        for position in positions
-            total += abs(position - entry) * 10^(room - 1)
-        end
-    end
-    return total
-end
+# Right now, the heuristic makes it harder to find the best solution.
+# This needs some more work...
+# function heuristic(state::State)
+#     total = 0
+#     for room ∈ 1:4
+#         positions = Int[]
+#         push!(positions, findall(x -> x == room, state.hallway)...)
+#         for ri ∈ 1:4
+#             ri == room && continue
+#             c = findall(x -> x == room, state.rooms[ri]) |> length
+#             for _ ∈ 1:c
+#                 push!(positions, ri * 2 + 1)
+#             end
+#         end
+#         entry = room * 2 + 1
+#         for position in positions
+#             total += abs(position - entry) * 10^(room - 1)
+#         end
+#     end
+#     return total
+# end
 
 function solve(state::State, goal::UInt)
     dist = DefaultDict{Int,Int}(typemax(Int))
@@ -146,7 +148,8 @@ function solve(state::State, goal::UInt)
             nenc = encode(neighbour)
             if ndist < dist[nenc]
                 dist[nenc] = ndist
-                queue[neighbour] = ndist + heuristic(neighbour)
+                # queue[neighbour] = ndist + heuristic(neighbour)
+                queue[neighbour] = ndist
             end
         end
     end
