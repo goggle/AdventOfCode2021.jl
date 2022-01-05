@@ -670,3 +670,17 @@ end
 @testset "Day 24" begin
     @test AdventOfCode2021.Day24.day24() == [59996912981939, 17241911811915]
 end
+
+@testset "Day 25" begin
+    sample = "v...>>.vv>\n" *
+             ".vv>>.vv..\n" *
+             ">>.>v>...v\n" *
+             ">>v>>.>.v.\n" *
+             "v>v.vv.v..\n" *
+             ">.>>..v...\n" *
+             ".vv..>.>v.\n" *
+             "v.v..>>v.v\n" *
+             "....v..v.>\n"
+    @test AdventOfCode2021.Day25.day25(sample) == 58
+    @test AdventOfCode2021.Day25.day25() == 308
+end
