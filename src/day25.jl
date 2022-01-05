@@ -14,43 +14,35 @@ function day25(input::String = readInput(joinpath(@__DIR__, "..", "data", "day25
         end
     end
 
-    current = watermap
-    nsteps = 1
-    while true
-        next = step(current)
-        current == next && break
-        current = next
+    nsteps = 0
+    changed = true
+    while changed
+        # println(nsteps)
+        changed = step!(watermap)
         nsteps += 1
     end
-
     return nsteps
 end
 
-function step(watermap)
-    nmap = fill('.', size(watermap))
-    for ci ∈ findall(x -> x == '>', watermap)
-        j = ci[2] + 1
-        if j > size(watermap, 2)
-            j = 1
-        end
-        if watermap[ci[1], j] == '.'
-            nmap[ci[1], j] = '>'
-        else
-            nmap[ci] = '>'
-        end
+function step!(watermap::Matrix{Char})
+    changed = false
+    east_facing_indices = findall(x -> x == '>', watermap)
+    move_right = map(x -> watermap[x[1], mod1(x[2]+1, size(watermap,2))] == '.', east_facing_indices)
+    for i ∈ findall(==(true), move_right)
+        changed = true
+        ci = east_facing_indices[i]
+        watermap[ci] = '.'
+        watermap[ci[1], mod1(ci[2]+1, size(watermap,2))] = '>'
     end
-    for ci ∈ findall(x -> x == 'v', watermap)
-        i = ci[1] + 1
-        if i > size(watermap, 1)
-            i = 1
-        end
-        if nmap[i, ci[2]] == '>' || watermap[i, ci[2]] == 'v'
-            nmap[ci] = 'v'
-        else
-            nmap[i, ci[2]] = 'v'
-        end
+    south_facing_indices = findall(x -> x == 'v', watermap)
+    move_down = map(x -> watermap[mod1(x[1]+1, size(watermap,1)), x[2]] == '.', south_facing_indices)
+    for i ∈ findall(==(true), move_down)
+        changed = true
+        ci = south_facing_indices[i]
+        watermap[ci] = '.'
+        watermap[mod1(ci[1]+1, size(watermap,1)), ci[2]] = 'v'
     end
-    return nmap
+    return changed
 end
 
 end # module
