@@ -17,7 +17,6 @@ function day25(input::String = readInput(joinpath(@__DIR__, "..", "data", "day25
     nsteps = 0
     changed = true
     while changed
-        # println(nsteps)
         changed = step!(watermap)
         nsteps += 1
     end
@@ -26,19 +25,15 @@ end
 
 function step!(watermap::Matrix{Char})
     changed = false
-    east_facing_indices = findall(x -> x == '>', watermap)
-    move_right = map(x -> watermap[x[1], mod1(x[2]+1, size(watermap,2))] == '.', east_facing_indices)
-    for i ∈ findall(==(true), move_right)
+    move_right = filter(x -> watermap[x[1], mod1(x[2]+1, size(watermap,2))] == '.', findall(==('>'), watermap))
+    for ci ∈ move_right
         changed = true
-        ci = east_facing_indices[i]
         watermap[ci] = '.'
         watermap[ci[1], mod1(ci[2]+1, size(watermap,2))] = '>'
     end
-    south_facing_indices = findall(x -> x == 'v', watermap)
-    move_down = map(x -> watermap[mod1(x[1]+1, size(watermap,1)), x[2]] == '.', south_facing_indices)
-    for i ∈ findall(==(true), move_down)
+    move_down = filter(x -> watermap[mod1(x[1]+1, size(watermap,1)), x[2]] == '.', findall(==('v'), watermap))
+    for ci ∈ move_down
         changed = true
-        ci = south_facing_indices[i]
         watermap[ci] = '.'
         watermap[mod1(ci[1]+1, size(watermap,1)), ci[2]] = 'v'
     end
