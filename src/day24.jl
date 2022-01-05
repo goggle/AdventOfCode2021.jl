@@ -2,145 +2,97 @@ module Day24
 
 using AdventOfCode2021
 
-
 function day24(input::String = readInput(joinpath(@__DIR__, "..", "data", "day24.txt")))
-    instructions, registers = parse_input(input)
-    inp = 23179246899999
-    run!(instructions, registers, inp)
-    
+    instructions = parse_input(input)
+    return solve(instructions)
 end
 
-function parse_input(inp::String)
+function parse_input(input::String)
     instructions = []
-    registers = Set{Char}()
-    for line in split.(split(rstrip(inp), "\n"))
+    for line in split.(split(rstrip(input), "\n"))
         if line[1] == "inp"
-            push!(instructions, (input,  Union{Int,Char}[line[2][1]]))
-            push!(registers, line[2][1])
-        elseif line[1] == "add"
+            push!(instructions, (line[1], line[2][1]))
+        else
             x = tryparse(Int, line[3])
             if x === nothing
-                push!(instructions, (add, Union{Int,Char}[line[2][1], line[3][1]]))
-                push!(registers, line[3][1])
+                push!(instructions, (line[1], line[2][1], line[3][1]))
             else
-                push!(instructions, (add, Union{Int,Char}[line[2][1], x]))
-            end
-        elseif line[1] == "mul"
-            x = tryparse(Int, line[3])
-            if x === nothing
-                push!(instructions, (multiply, Union{Int,Char}[line[2][1], line[3][1]]))
-                push!(registers, line[3][1])
-            else
-                push!(instructions, (multiply, Union{Int,Char}[line[2][1], x]))
-            end
-        elseif line[1] == "div"
-            x = tryparse(Int, line[3])
-            if x === nothing
-                push!(instructions, (divide, Union{Int,Char}[line[2][1], line[3][1]]))
-                push!(registers, line[3][1])
-            else
-                push!(instructions, (divide, Union{Int,Char}[line[2][1], x]))
-            end
-        elseif line[1] == "mod"
-            x = tryparse(Int, line[3])
-            if x === nothing
-                push!(instructions, (modulo, Union{Int,Char}[line[2][1], line[3][1]]))
-                push!(registers, line[3][1])
-            else
-                push!(instructions, (modulo, Union{Int,Char}[line[2][1], x]))
-            end
-        elseif line[1] == "eql"
-            x = tryparse(Int, line[3])
-            if x === nothing
-                push!(instructions, (equal, Union{Int,Char}[line[2][1], line[3][1]]))
-                push!(registers, line[3][1])
-            else
-                push!(instructions, (equal, Union{Int,Char}[line[2][1], x]))
+                push!(instructions, (line[1], line[2][1], x))
             end
         end
     end
-    return instructions, registers
+    return instructions
 end
 
-function run!(instructions, reg::Set{Char}, inp::Int)
-    registers = Dict{Char,Int}()
-    for r ∈ reg
-        registers[r] = 0
-    end
-    add_input_to_program!(instructions, inp)
-    for (instruction, params) ∈ instructions
-        instruction(registers, params...)
-    end
-    return registers
-end
-
-function add_input_to_program!(instructions, inp::Int)
-    digs = reverse(digits(inp))
-    i = 1
-    for instruction ∈ instructions
-        if instruction[1] == input
-            if length(instruction[2]) == 1
-                push!(instruction[2], digs[i])
-            else
-                instruction[2][2] = digs[i]
-            end
-            i += 1
+function split_program(program)
+    programs = []
+    for instruction in program
+        if instruction[1] == "inp"
+            push!(programs, [])
         end
+        push!(programs[end], instruction)
     end
+    return programs
 end
 
-function input(reg::Dict{Char,Int}, a::Char, inp::Int)
-    reg[a] = inp
+function solve(instructions)
+    # Note: This solution uses some concrete analysis of my personal input.
+    # It is not guaranteed to work on every distributed input.
+    #
+    # The input consists of 14 different subprograms.
+    # Every subprogram can be categorized into two different types (type 1 or type 2).
+    #
+    # Type 1 programs change the value of `z` by the following rule
+    #    z = 26 * z + input + some_number
+    # where `some_number` are the values in `add_to_z`
+    #
+    # Type 2 programs change the value of `z` by the rule
+    #    z = z ÷ 26
+    # iff
+    #    z % 26 + some_number == input    (*)
+    # where `some_number` is `add_to_x`
+    #
+    # To achieve a `z` value of 0 at the end, we must make sure that type 2 programs
+    # always reduce the value of `z` (by fullfilling (*))
+    # The values of type 1 programs need to be guessed. Here I use a recursive backtracking search.
+    programs = split_program(instructions)
+    type_one_programs = [!isempty(findall(x -> (x[1] == "div" && x[2] == 'z' && x[3] == 1), program)) for program in programs]
+    add_to_x = [program[findfirst(x -> (x[1] == "add" && x[2] == 'x' && isa(x[3], Int)), program)][3] for program in programs]
+    add_to_z = [program[findlast(x -> (x[1] == "add" && x[2] == 'y' && isa(x[3], Int)), program)][3] for program in programs]
+
+    inputs = Int[]
+    solve!(inputs, programs, 1, 0, type_one_programs, add_to_x, add_to_z, true)
+    part1 = parse(Int, join(inputs))
+    inputs = Int[]
+    solve!(inputs, programs, 1, 0, type_one_programs, add_to_x, add_to_z, false)
+    part2 = parse(Int, join(inputs))
+    return [part1, part2]
 end
 
-function add(reg::Dict{Char,Int}, a::Char, b::Int)
-    reg[a] += b
-end
-
-function add(reg::Dict{Char,Int}, a::Char, b::Char)
-    reg[a] += reg[b]
-end
-
-function multiply(reg::Dict{Char,Int}, a::Char, b::Int)
-    reg[a] *= b
-end
-
-function multiply(reg::Dict{Char,Int}, a::Char, b::Char)
-    reg[a] *= reg[b]
-end
-
-function divide(reg::Dict{Char,Int}, a::Char, b::Int)
-    reg[a] ÷= b
-end
-
-function divide(reg::Dict{Char,Int}, a::Char, b::Char)
-    reg[a] ÷= reg[b]
-end
-
-function modulo(reg::Dict{Char,Int}, a::Char, b::Int)
-    reg[a] = mod(reg[a], b)
-end
-
-function modulo(reg::Dict{Char,Int}, a::Char, b::Char)
-    reg[a] = mod(reg[a], reg[b])
-end
-
-function equal(reg::Dict{Char,Int}, a::Char, b::Int)
-    if reg[a] == b
-        reg[a] = 1
+function solve!(inputs, programs, programnumber, z, type_one_programs, add_to_x, add_to_z, p1)
+    length(inputs) == length(programs) && return true
+    if type_one_programs[programnumber]
+        range = (p1 == true ? (9:-1:1) : (1:9))
+        for w ∈ range
+            push!(inputs, w)
+            result = solve!(inputs, programs, programnumber + 1, 26 * z + w + add_to_z[programnumber], type_one_programs, add_to_x, add_to_z, p1)
+            if !result
+                pop!(inputs)
+                continue
+            end
+            return result
+        end
+        return false
     else
-        reg[a] = 0
+        value = mod(z, 26) + add_to_x[programnumber]
+        value ∉ 1:9 && return false
+        push!(inputs, value)
+        result = solve!(inputs, programs, programnumber + 1, z ÷ 26, type_one_programs, add_to_x, add_to_z, p1)
+        if !result
+            pop!(inputs)
+        end
+        return result
     end
 end
-
-function equal(reg::Dict{Char,Int}, a::Char, b::Char)
-    if reg[a] == reg[b]
-        reg[a] = 1
-    else
-        reg[a] = 0
-    end
-end
-
-
 
 end # module
