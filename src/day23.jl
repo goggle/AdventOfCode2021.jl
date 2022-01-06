@@ -40,9 +40,9 @@ end
 
 function day23(input::String = readInput(joinpath(@__DIR__, "..", "data", "day23.txt")))
     state = parse_input(input)
-    p1 = solve(state, encode(State(repeat([0], 11), [[1, 1], [2, 2], [3, 3], [4, 4]])))
+    p1 = solve(state, encode(State(repeat([0], 11), [[1, 1], [2, 2], [3, 3], [4, 4]])), heuristic)
     state = complete(state)
-    p2 = solve(state, encode(State(repeat([0], 11), [repeat([i], 4) for i = 1:4])))
+    p2 = solve(state, encode(State(repeat([0], 11), [repeat([i], 4) for i = 1:4])), heuristic)
     return [p1, p2]
 end
 
@@ -139,7 +139,7 @@ function heuristic(state::State)
     return total
 end
 
-function solve(state::State, goal::UInt)
+function solve(state::State, goal::UInt, h)
     dist = DefaultDict{UInt,Int}(typemax(Int))
     dist[encode(state)] = 0
     queue = PriorityQueue{State,Int}()
@@ -154,7 +154,7 @@ function solve(state::State, goal::UInt)
             nenc = encode(neighbour)
             if ndist < dist[nenc]
                 dist[nenc] = ndist
-                queue[neighbour] = ndist + heuristic(neighbour)
+                queue[neighbour] = ndist + h(neighbour)
             end
         end
     end
