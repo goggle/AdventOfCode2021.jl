@@ -22,8 +22,14 @@ end
 # end
 
 function encode(state::State)
-    data = vcat(state.hallway, collect(Iterators.flatten(state.rooms[:])))
-    return [UInt(5)^(length(data) - i) * data[i] for i = 1:length(data)] |> sum
+    s = UInt(0)
+    for (i, elem) ∈ enumerate(state.hallway)
+        s += elem * UInt(5)^i
+    end
+    for (i, elem) ∈ enumerate(Iterators.flatten(state.rooms))
+        s += elem * UInt(5)^(i + length(state.hallway))
+    end
+    return s
 end
 
 function complete(state::State)
@@ -93,7 +99,7 @@ function next_states(state::State)
         entry = room * 2 + 1
         for resti in restinds
             m, M = minmax(entry, resti)
-            if !any(b -> b ∈ m:M, blockerinds)
+            if !any(b -> b ∈ m+1:M-1, blockerinds)
                 cost = (M - m + add) * 10^(state.rooms[room][add] - 1)
                 push!(statescosts, (swap(state, resti, room, add), cost))
             end
@@ -111,30 +117,30 @@ function swap(state::State, hallwayind::Integer, roomnumber::Integer, roomind::I
     return State(hallway, rooms)
 end
 
-# Right now, the heuristic makes it harder to find the best solution.
-# This needs some more work...
-# function heuristic(state::State)
-#     total = 0
-#     for room ∈ 1:4
-#         positions = Int[]
-#         push!(positions, findall(x -> x == room, state.hallway)...)
-#         for ri ∈ 1:4
-#             ri == room && continue
-#             c = findall(x -> x == room, state.rooms[ri]) |> length
-#             for _ ∈ 1:c
-#                 push!(positions, ri * 2 + 1)
-#             end
-#         end
-#         entry = room * 2 + 1
-#         for position in positions
-#             total += abs(position - entry) * 10^(room - 1)
-#         end
-#     end
-#     return total
-# end
+function heuristic(state::State)
+    total = 0
+    for room ∈ 1:4
+        i = length(state.rooms[room])
+        while state.rooms[i] == room
+            i -= 1
+            i == 0 && break
+        end
+        for k = 1:i
+            if state.rooms[room][k] != 0
+                total += (k + abs(2*room+1 - 2*state.rooms[room][k]+1)) * 10^(state.rooms[room][k] - 1)
+            end
+        end
+    end
+    for i ∈ 1:length(state.hallway)
+        if state.hallway[i] != 0
+            total += abs(2 * state.hallway[i] + 1 - i) * 10^(state.hallway[i] - 1)
+        end
+    end
+    return total
+end
 
 function solve(state::State, goal::UInt)
-    dist = DefaultDict{Int,Int}(typemax(Int))
+    dist = DefaultDict{UInt,Int}(typemax(Int))
     dist[encode(state)] = 0
     queue = PriorityQueue{State,Int}()
     queue[state] = 0
@@ -148,8 +154,7 @@ function solve(state::State, goal::UInt)
             nenc = encode(neighbour)
             if ndist < dist[nenc]
                 dist[nenc] = ndist
-                # queue[neighbour] = ndist + heuristic(neighbour)
-                queue[neighbour] = ndist
+                queue[neighbour] = ndist + heuristic(neighbour)
             end
         end
     end
