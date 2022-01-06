@@ -53,7 +53,7 @@ function solve(instructions)
     # where `some_number` is `add_to_x`
     #
     # To achieve a `z` value of 0 at the end, we must make sure that type 2 programs
-    # always reduce the value of `z` (by fullfilling (*))
+    # always reduce the value of `z` (by satisfying (*))
     # The values of type 1 programs need to be guessed. Here I use a recursive backtracking search.
     programs = split_program(instructions)
     type_one_programs = [!isempty(findall(x -> (x[1] == "div" && x[2] == 'z' && x[3] == 1), program)) for program in programs]
