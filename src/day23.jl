@@ -4,161 +4,224 @@ using AdventOfCode2021
 using DataStructures
 
 struct State
-    hallway::Vector{Int8}
-    rooms::Vector{Vector{Int8}}
+    hallway::Int64
+    rooms::Int64
+    roomlength::UInt8
 end
 
-# function Base.show(io::IO, state::State)
-#     print(io, repeat('#', 13))
-#     d = Dict(0 => '.', 1 => 'A', 2 => 'B', 3 => 'C', 4 => 'D')
-#     print(io, "\n#")
-#     print(io, map(x -> d[x], state.hallway) |> join)
-#     print(io, "#\n")
-#     print(io, "###" * d[state.rooms[1][1]] * "#" * d[state.rooms[2][1]] * "#" * d[state.rooms[3][1]] * "#" * d[state.rooms[4][1]] * "###\n")
-#     for i = 2:length(state.rooms[1])
-#         print(io, "  #" * d[state.rooms[1][i]] * "#" * d[state.rooms[2][i]] * "#" * d[state.rooms[3][i]] * "#" * d[state.rooms[4][i]] * "#  \n")
-#     end
-#     print(io, "  " * repeat('#', 9) * "  \n")
-# end
-
-function encode(state::State)
-    s = UInt(0)
-    for (i, elem) ∈ enumerate(state.hallway)
-        s += elem * UInt(5)^i
+function Base.show(io::IO, state::State)
+    print(io, repeat('#', 13))
+    d = Dict(0 => '.', 1 => 'A', 2 => 'B', 3 => 'C', 4 => 'D')
+    print(io, "\n#")
+    print(io, map(x -> d[x], get_hallway_entry(state, i) for i ∈ 1:11) |> join)
+    print(io, "#\n")
+    print(io, "###" * d[get_room_entry(state, 1, 1)] * "#" * d[get_room_entry(state, 2, 1)] * "#" * d[get_room_entry(state, 3, 1)] * "#" * d[get_room_entry(state, 4, 1)] * "###\n")
+    for i = 2:state.roomlength
+        print(io, "  #" * d[get_room_entry(state, 1, i)] * "#" * d[get_room_entry(state, 2, i)] * "#" * d[get_room_entry(state, 3, i)] * "#" * d[get_room_entry(state, 4, i)] * "#  \n")
     end
-    for (i, elem) ∈ enumerate(Iterators.flatten(state.rooms))
-        s += elem * UInt(5)^(i + length(state.hallway))
-    end
-    return s
+    print(io, "  " * repeat('#', 9) * "  \n")
 end
 
-function complete(state::State)
-    miss = [[4, 4], [3, 2], [2, 1], [1, 3]]
-    rooms = [vcat(state.rooms[i][1], miss[i], state.rooms[i][2]) for i = 1:4]
-    return State(state.hallway, rooms)
+function init_state(hallway::Vector{T}, rooms::Vector{Vector{S}}) where {T <: Integer, S <: Integer}
+    hw = UInt64(0)
+    for entry ∈ reverse(hallway)
+        hw = (hw << 3) + entry
+    end
+    
+    rs = UInt64(0)
+    for room ∈ reverse(rooms)
+        for entry ∈ reverse(room)
+            rs = (rs << 3) + entry
+        end
+    end
+
+    return State(hw, rs, UInt8(length(rooms[1])))
+end
+
+function get_hallway_entry(state::State, i::Integer)
+    return (state.hallway >> (3*(i-1)+2) & 1) << 2 + (state.hallway >> (3*(i-1)+1) & 1) << 1 + (state.hallway >> (3*(i-1)) & 1)
+end
+
+function get_room_entry(state::State, room::Integer, i::Integer)
+    return (state.rooms >> (3*(room-1)*state.roomlength + 3*(i-1) + 2) & 1) << 2 + (state.rooms >> (3*(room-1)*state.roomlength + 3*(i-1) + 1) & 1) << 1 + (state.rooms >> (3*(room-1)*state.roomlength + 3*(i-1)) & 1)
+end
+
+function swap(state::State, i::T1, room::T2, j::T3) where {T1 <: Integer, T2 <: Integer, T3 <: Integer}
+    hpos = 3 * (i - 1)
+    rpos = 3 * (room - 1) * state.roomlength + 3 * (j - 1)
+
+    hallway = state.hallway
+    rooms = state.rooms
+    for k = 0:2
+        hallway_bit = (state.hallway >> (hpos + k)) & 1
+        room_bit = (state.rooms >> (rpos + k)) & 1
+        hallway_bit == room_bit && continue
+        hallway = (1 << (hpos + k)) ⊻ hallway
+        rooms = (1 << (rpos + k)) ⊻ rooms
+    end
+    return State(hallway, rooms, state.roomlength)
+end
+
+function swap(state::State, i::Integer, room1::Integer, j::Integer, room2::Integer)
+    r1pos = 3 * (room1 - 1) * state.roomlength + 3 * (i - 1)
+    r2pos = 3 * (room2 - 1) * state.roomlength + 3 * (j - 1)
+    rooms = state.rooms
+    for k = 0:2
+        r1bit = (state.rooms >> (r1pos + k)) & 1
+        r2bit = (state.rooms >> (r2pos + k)) & 1
+        r1bit == r2bit && continue
+        mask = 1 << (r1pos + k) | 1 << (r2pos + k)
+        rooms = rooms ⊻ mask
+    end
+    return State(state.hallway, rooms, state.roomlength)
 end
 
 function day23(input::String = readInput(joinpath(@__DIR__, "..", "data", "day23.txt")))
     state = parse_input(input)
-    p1 = solve(state, encode(State(repeat([0], 11), [[1, 1], [2, 2], [3, 3], [4, 4]])), heuristic)
-    state = complete(state)
-    p2 = solve(state, encode(State(repeat([0], 11), [repeat([i], 4) for i = 1:4])), heuristic)
+    goal_p1 = init_state(repeat([0], 11), [[1, 1], [2, 2], [3, 3], [4, 4]])
+    p1 = solve(state, goal_p1, heuristic)
+
+    state_p2 = transform_part2(state)
+    goal_p2 = init_state(repeat([0], 11), [repeat([i], 4) for i = 1:4])
+    p2 = solve(state_p2, goal_p2, heuristic)
+
     return [p1, p2]
 end
 
 function parse_input(input::String)
     lines = split(input)[2:4]
-    d = Dict{Char,Int8}('.' => 0, 'A' => 1, 'B' => 2, 'C' => 3, 'D' => 4)
+    d = Dict{Char,Int}('.' => 0, 'A' => 1, 'B' => 2, 'C' => 3, 'D' => 4)
     hallway = map(x -> d[x], collect(replace(strip(lines[1]), '#' => "")))
     stages = []
     for line in lines[2:3]
         push!(stages, map(x -> d[x], collect(replace(strip(line), '#' => ""))))
     end
     rm = hcat(stages...)
-    return State(hallway, [rm[i,:] for i = 1:4])
+    return init_state(hallway, [rm[i,:] for i = 1:4])
 end
 
-function next_states(state::State)
-    statescosts = Tuple{State,Int}[]
+function transform_part2(state::State)
+    miss = [[4, 4], [3, 2], [2, 1], [1, 3]]
+    rooms = [vcat(get_room_entry(state, i, 1), miss[i], get_room_entry(state, i, 2)) for i = 1:4]
+    return init_state([get_hallway_entry(state, i) for i = 1:11], rooms)
+end
 
-    restinds = intersect([1, 2, 4, 6, 8, 10, 11], findall(x -> x == 0, state.hallway))
-    blockerinds = findall(x -> x != 0, state.hallway)
-
-    for bi in blockerinds
-        v = state.hallway[bi]
-        entry = 2*v + 1
-
-        add = findlast(x -> x == 0, state.rooms[v])
-        add === nothing && continue
-        skip = false
-        for i = add + 1:length(state.rooms[v])
-            if state.rooms[v][i] != v
-                skip = true
+function next_states_and_costs(state::State)
+    add = [0, 0, 0, 0]  # how many entries from the start are set to 0
+    room_sorted = [true, true, true, true]
+    room_entries = (3, 5, 7, 9)
+    for room ∈ 1:4
+        a = 0
+        while a + 1 <= state.roomlength && get_room_entry(state, room, a + 1) == 0
+            a += 1
+        end
+        add[room] = a
+        for i ∈ a + 1 : state.roomlength
+            if get_room_entry(state, room, i) != room
+                room_sorted[room] = false
                 break
             end
         end
-        skip && continue
-        m, M = minmax(entry, bi)
-        if !any(b -> b ∈ m+1:M-1, blockerinds)
-            cost = (M - m + add) * 10^(v - 1)
-            push!(statescosts, (swap(state, bi, v, add), cost))
-        end
     end
 
-    for room in 1:4
-        lastzero = findlast(x -> x == 0, state.rooms[room])
-        lastzero == length(state.rooms[room]) && continue
-        if lastzero === nothing
-            add = 1
-        else
-            add = lastzero + 1
-        end
-        all(state.rooms[room][add:length(state.rooms[room])] .== room) && continue
+    states_costs = Vector{Tuple{State,Int}}()
 
+    # Move amphipods from rooms into the hallway:
+    for room ∈ 1:4
+        room_sorted[room] && continue
+        destination_room = get_room_entry(state, room, add[room] + 1)
+        destination_index = destination_room * 2 + 1
+        for dir ∈ (-1, 1)
+            i = room_entries[room]
+            while i ∈ 2:10
+                i += dir
 
-        entry = room * 2 + 1
-        for resti in restinds
-            m, M = minmax(entry, resti)
-            if !any(b -> b ∈ m+1:M-1, blockerinds)
-                cost = (M - m + add) * 10^(state.rooms[room][add] - 1)
-                push!(statescosts, (swap(state, resti, room, add), cost))
+                # If we can directly move an amphipod from one room into its destination room, just do it:
+                if i == destination_index
+                    if room_sorted[destination_room]
+                        cost = (abs(room_entries[room] - i) + add[room] + add[destination_room] + 1) * 10^(destination_room - 1)
+                        return Tuple{State,Int}[(swap(state, add[room] + 1, room, add[destination_room], destination_room), cost)]
+                    end
+                end
+
+                i ∈ room_entries && continue
+                get_hallway_entry(state, i) != 0 && break
+                cost = (abs(room_entries[room] - i) + add[room] + 1) * 10^(get_room_entry(state, room, add[room] + 1) - 1)
+                push!(states_costs, (swap(state, i, room, add[room] + 1), cost))
             end
         end
     end
-    return statescosts
+
+    # Move amphipods from the hallway into the rooms
+    blockerinds = [i for i ∈ 1:11 if get_hallway_entry(state, i) != 0]
+    for bi in blockerinds
+        amphipod = get_hallway_entry(state, bi)
+        !room_sorted[amphipod] && continue
+        entry = amphipod * 2 + 1
+        m, M = minmax(bi, entry)
+        length(intersect(m+1:M-1, blockerinds)) > 0 && continue
+        cost = (M - m + add[amphipod]) * 10^(amphipod - 1)
+        push!(states_costs, (swap(state, bi, amphipod, add[amphipod]), cost))
+    end
+    return states_costs
 end
 
-function swap(state::State, hallwayind::Integer, roomnumber::Integer, roomind::Integer)
-    hallway = copy(state.hallway)
-    rooms = deepcopy(state.rooms)
-    tmp = hallway[hallwayind]
-    hallway[hallwayind] = rooms[roomnumber][roomind]
-    rooms[roomnumber][roomind] = tmp
-    return State(hallway, rooms)
-end
+# function reconstruct(camefrom, current)
+#     path = State[]
+#     while current ∈ keys(camefrom)
+#         current = camefrom[current]
+#         pushfirst!(path, current)
+#     end
+#     return path
+# end
 
 function heuristic(state::State)
     total = 0
     for room ∈ 1:4
-        i = length(state.rooms[room])
-        while state.rooms[i] == room
+        i = state.roomlength
+        while i > 0
+            get_room_entry(state, room, i) != room && break
             i -= 1
-            i == 0 && break
         end
-        for k = 1:i
-            if state.rooms[room][k] != 0
-                total += (k + abs(2*room+1 - 2*state.rooms[room][k]+1)) * 10^(state.rooms[room][k] - 1)
+        for k ∈ 1:i
+            amphipod = get_room_entry(state, room, k)
+            if amphipod == 0
+                total += k * 10^(room - 1)
+            else
+                total += (k + 2*abs(room - amphipod)) * 10^(amphipod - 1) + k * 10^(room - 1)
             end
         end
     end
-    for i ∈ 1:length(state.hallway)
-        if state.hallway[i] != 0
-            total += abs(2 * state.hallway[i] + 1 - i) * 10^(state.hallway[i] - 1)
-        end
+    for i ∈ 1:11
+        amphipod = get_hallway_entry(state, i)
+        amphipod == 0 && continue
+        total += abs(i - (amphipod * 2 + 1)) * 10^(amphipod - 1)
     end
     return total
 end
 
-function solve(state::State, goal::UInt, h)
-    dist = DefaultDict{UInt,Int}(typemax(Int))
-    dist[encode(state)] = 0
+function solve(state::State, goal::State, h)
+    dist = DefaultDict{State,Int}(typemax(Int))
+    dist[state] = 0
     queue = PriorityQueue{State,Int}()
     queue[state] = 0
 
+    # camefrom = Dict{State,State}()
+
     while !isempty(queue)
         current = dequeue!(queue)
-        cenc = encode(current)
-        cenc == goal && break
-        for (neighbour, cost) ∈ next_states(current)
-            ndist = dist[cenc] + cost
-            nenc = encode(neighbour)
-            if ndist < dist[nenc]
-                dist[nenc] = ndist
+        current == goal && break
+        for (neighbour, cost) ∈ next_states_and_costs(current)
+            ndist = dist[current] + cost
+            if ndist < dist[neighbour]
+                dist[neighbour] = ndist
                 queue[neighbour] = ndist + h(neighbour)
+                # camefrom[neighbour] = current
             end
         end
     end
     return dist[goal]
 end
+
 
 end # module
