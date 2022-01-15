@@ -4,7 +4,7 @@ using AdventOfCode2021
 
 struct Cube
     on::Bool
-    data::Vector{Int}
+    data::NTuple{6,Int}
 end
 
 function day22(input::String = readInput(joinpath(@__DIR__, "..", "data", "day22.txt")))
@@ -22,7 +22,7 @@ function parse_input(input::String)
     for line in split(rstrip(input), "\n")
         m = match(r, line)
         on = (m.captures[1] == "on" ? true : false)
-        push!(cubes, Cube(on, parse.(Int, m.captures[2:7]))) 
+        push!(cubes, Cube(on, Tuple(parse.(Int, m.captures[2:7])))) 
     end
     return cubes
 end
@@ -34,7 +34,7 @@ function intersection(cube::Cube, other::Cube, onoff::Bool)
     yintersection.start > yintersection.stop && return false
     zintersection = intersect(cube.data[5]:cube.data[6], other.data[5]:other.data[6])
     zintersection.start > zintersection.stop && return false
-    return Cube(onoff, [xintersection.start, xintersection.stop, yintersection.start, yintersection.stop, zintersection.start, zintersection.stop])
+    return Cube(onoff, (xintersection.start, xintersection.stop, yintersection.start, yintersection.stop, zintersection.start, zintersection.stop))
 end
 
 function volume(cube::Cube)
@@ -42,7 +42,7 @@ function volume(cube::Cube)
 end
 
 function crop_volume(cube::Cube)
-    intcube = intersection(cube, Cube(true, [-50, 50, -50, 50, -50, 50]), cube.on)
+    intcube = intersection(cube, Cube(true, (-50, 50, -50, 50, -50, 50)), cube.on)
     intcube == false && return 0
     return volume(intcube)
 end
