@@ -11,7 +11,6 @@ function day20(input::String = readInput(joinpath(@__DIR__, "..", "data", "day20
     p1 = image |> sum
     p2 = enhance(algorithm, image, outsidepixelset, 48)[1] |> sum
     return [p1, p2]
-
 end
 
 function enhance(algorithm, image, outsidepixelset, niter)
