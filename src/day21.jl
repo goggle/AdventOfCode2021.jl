@@ -1,6 +1,8 @@
 module Day21
 
 using AdventOfCode2021
+using Memoize
+using StaticArrays
 
 function day21(input::String = readInput(joinpath(@__DIR__, "..", "data", "day21.txt")))
     positions = parse.(Int, map(x -> x[end], split.(split(rstrip(input), "\n"))))
@@ -9,7 +11,7 @@ end
 
 function part1(positions::Vector{Int})
     positions = copy(positions)
-    scores = [0, 0]
+    scores = MVector(0, 0)
     dice = 0
     dicerolls = 0
     while true
@@ -19,44 +21,35 @@ function part1(positions::Vector{Int})
             dice = mod1(dice + 3, 100)
             positions[i] = mod1(positions[i] + s, 10)
             scores[i] += positions[i]
-            if scores[i] >= 1000
-                @goto done
-            end
+            scores[i] >= 1000 && return (scores[1] >= 1000 ? scores[2] : scores[1]) * dicerolls
         end
     end
-    @label done
-    return (scores[1] >= 1000 ? scores[2] : scores[1]) * dicerolls
 end
 
 function part2(positions::Vector{Int})
-    wins = [0, 0]
-    part2!(wins, 1, positions[1], positions[2], 0, 0, 1)
-    return maximum(wins)
+    solve_part2(1, positions[1], positions[2], 0, 0, 1) |> maximum
 end
 
-function part2!(wins::Vector{Int}, pturn::Int, p1pos::Int, p2pos::Int, p1score::Int, p2score::Int, factor::Int)
+@memoize function solve_part2(pturn::Int, p1pos::Int, p2pos::Int, p1score::Int, p2score::Int, factor::Int)
+    p1score >= 21 && return MVector(1, 0)
+    p2score >= 21 && return MVector(0, 1)
+
     ncomb = (1, 3, 6, 7, 6, 3, 1)
+    wins = MVector(0, 0)
     if pturn == 1
         for (dice, nc) ∈ zip(3:9, ncomb)
             newp1pos = mod1(p1pos + dice, 10)
             newp1score = p1score + newp1pos
-            if newp1score >= 21
-                wins[1] += factor * nc
-                continue
-            end
-            part2!(wins, 2, newp1pos, p2pos, newp1score, p2score, factor * nc)
+            wins .+= nc * solve_part2(2, newp1pos, p2pos, newp1score, p2score, factor * nc)
         end
     else
         for (dice, nc) ∈ zip(3:9, ncomb)
             newp2pos = mod1(p2pos + dice, 10)
             newp2score = p2score + newp2pos
-            if newp2score >= 21
-                wins[2] += factor * nc
-                continue
-            end
-            part2!(wins, 1, p1pos, newp2pos, p1score, newp2score, factor * nc)
+            wins .+= nc * solve_part2(1, p1pos, newp2pos, p1score, newp2score, factor * nc)
         end
     end
+    return wins
 end
 
 end # module
