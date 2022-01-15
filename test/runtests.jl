@@ -663,6 +663,8 @@ end
              "###B#C#B#D###\n" *
              "  #A#D#C#A#\n" *
              "  #########\n"
+    sample_state = AdventOfCode2021.Day23.parse_input(sample)
+    @test AdventOfCode2021.Day23.parse_input(sprint(AdventOfCode2021.Day23.show, sample_state)) == sample_state
     @test AdventOfCode2021.Day23.day23(sample) == [12521, 44169]
     @test AdventOfCode2021.Day23.day23() == [18300, 50190]
 end
