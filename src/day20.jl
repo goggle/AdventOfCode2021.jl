@@ -1,12 +1,12 @@
 module Day20
 
 using AdventOfCode2021
+using StaticArrays
 
 function day20(input::String = readInput(joinpath(@__DIR__, "..", "data", "day20.txt")))
     lines = split(input)
     algorithm = map(x -> (x == "#" ? true : false), split(lines[1], ""))
     image = map(x -> (x == '#' ? true : false), hcat(reduce.(vcat, lines[2:end])...))' |> collect
-
     image, outsidepixelset = enhance(algorithm, image, false, 2)
     p1 = image |> sum
     p2 = enhance(algorithm, image, outsidepixelset, 48)[1] |> sum
@@ -27,7 +27,7 @@ function apply_algorithm(algorithm, image, outsidepixelset)
     eimage = similar(cimage)
     for i = 1:size(cimage, 1)
         for j = 1:size(cimage, 2)
-            values = [2^l for l = 8:-1:0]
+            values = MVector(256, 128, 64, 32, 16, 8, 4, 2, 1)
             for m = i-1:i+1
                 for n = j-1:j+1
                     if !checkbounds(Bool, cimage, m, n)
