@@ -2,10 +2,12 @@ module Day19
 
 using AdventOfCode2021
 using LinearAlgebra
+using StaticArrays
 
 function day19(input::String = readInput(joinpath(@__DIR__, "..", "data", "day19.txt")))
     data = parse_input(input)
     rotations = generate_rotations()
+    inverse_rotations = [inv(rot) for rot ∈ rotations]
     overlapping_neighbours = find_neighbours(data)
     d = Dict{Int, Dict{Int, Tuple{Vector{Int}, Int}}}()
     for i = 1:length(data)
@@ -15,13 +17,15 @@ function day19(input::String = readInput(joinpath(@__DIR__, "..", "data", "day19
         for j = i + 1:length(data)
             if overlapping_neighbours[i,j]
                 d[i][j] = compare(data[i], data[j], rotations)
-                d[j][i] = compare(data[j], data[i], rotations)
+                invroti = findfirst(x -> x == inverse_rotations[d[i][j][2]], rotations)
+                d[j][i] = (-rotations[invroti]*d[i][j][1], invroti)
             end
         end
     end
+    # return d
 
     scanners = map_scanners(d, rotations)
-    beacons = Set{Vector{Int}}()
+    beacons = Set{SVector{3, Int}}()
 
     for (i, scannerdata) ∈ enumerate(data)
         for relcoord ∈ eachcol(scannerdata)
@@ -47,7 +51,7 @@ function parse_input(input::String)
     spinput = split(input, "\n")
     i = 1
     while i <= length(spinput)
-        tmp = Vector{Vector{Int}}()
+        tmp = Vector{SVector{3,Int}}()
         i += 1
         while spinput[i] != ""
             push!(tmp, parse.(Int, split(spinput[i], ",")))
@@ -84,18 +88,18 @@ function find_neighbours(data::Vector{Matrix})
 end
 
 function generate_rotations()
-    A = [0 0 -1; 0 1 0; 1 0 0]
-    B = [1 0 0; 0 0 -1; 0 1 0]
-    C = [0 -1 0; 1 0 0; 0 0 1]
+    A = SMatrix{3,3}([0 0 -1; 0 1 0; 1 0 0])
+    B = SMatrix{3,3}([1 0 0; 0 0 -1; 0 1 0])
+    C = SMatrix{3,3}([0 -1 0; 1 0 0; 0 0 1])
     return unique([A^i*B^j*C^k for i ∈ 0:3 for j ∈ 0:3 for k ∈ 0:3])
 end
 
-function compare(orig::Matrix{Int}, other::Matrix{Int}, rotations::Vector{Matrix{Int}})
+function compare(orig::Matrix{Int}, other::Matrix{Int}, rotations::Vector{SMatrix{3, 3, Int, 9}})
     # Compares two scanners. If they overlap, the position of the second scanner and
     # the corresponding rotation index are returned.
     for r = 1:length(rotations)
-        counts = Dict{Vector{Int}, Int}()
-        tmp = Set{Vector{Int}}()
+        counts = Dict{SVector{3,Int}, Int}()
+        tmp = Set{SVector{3,Int}}()
         for i = 1:size(orig, 2)
             for j = 1:size(other, 2)
                 n = orig[:, i] - rotations[r] * other[:,j]
@@ -115,8 +119,8 @@ function compare(orig::Matrix{Int}, other::Matrix{Int}, rotations::Vector{Matrix
     end
 end
 
-function map_scanners(d::Dict{Int, Dict{Int, Tuple{Vector{Int}, Int}}}, rotations::Vector{Matrix{Int}})
-    scanners = Dict{Int, Tuple{Vector{Int}, Int}}()
+function map_scanners(d::Dict{Int, Dict{Int, Tuple{Vector{Int}, Int}}}, rotations::Vector{SMatrix{3, 3, Int, 9}})
+    scanners = Dict{Int, Tuple{SVector{3,Int}, Int}}()
     scanners[1] = ([0, 0, 0], findfirst(x -> x == [1 0 0 ; 0 1 0 ; 0 0 1], rotations))
     done = Set{Int}([1])
     next = Int[]
