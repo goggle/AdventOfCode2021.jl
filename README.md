@@ -9,31 +9,31 @@ This Julia package contains my solutions for [Advent of Code 2021](https://adven
 
 | Day | Problem | Time | Allocated memory | Source |
 |----:|:-------:|-----:|-----------------:|:------:|
-| 1 | [:white_check_mark:](https://adventofcode.com/2021/day/1) | 252.909 μs | 238.33 KiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day01.jl) |
-| 2 | [:white_check_mark:](https://adventofcode.com/2021/day/2) | 377.261 μs | 236.02 KiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day02.jl) |
-| 3 | [:white_check_mark:](https://adventofcode.com/2021/day/3) | 311.636 μs | 265.66 KiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day03.jl) |
-| 4 | [:white_check_mark:](https://adventofcode.com/2021/day/4) | 4.760 ms | 5.50 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day04.jl) |
-| 5 | [:white_check_mark:](https://adventofcode.com/2021/day/5) | 1.300 ms | 2.09 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day05.jl) |
-| 6 | [:white_check_mark:](https://adventofcode.com/2021/day/6) | 35.063 μs | 40.83 KiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day06.jl) |
-| 7 | [:white_check_mark:](https://adventofcode.com/2021/day/7) | 1.536 ms | 73.31 KiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day07.jl) |
-| 8 | [:white_check_mark:](https://adventofcode.com/2021/day/8) | 1.804 ms | 1.20 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day08.jl) |
-| 9 | [:white_check_mark:](https://adventofcode.com/2021/day/9) | 3.376 ms | 2.57 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day09.jl) |
-| 10 | [:white_check_mark:](https://adventofcode.com/2021/day/10) | 208.445 μs | 35.25 KiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day10.jl) |
-| 11 | [:white_check_mark:](https://adventofcode.com/2021/day/11) | 1.055 ms | 617.28 KiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day11.jl) |
-| 12 | [:white_check_mark:](https://adventofcode.com/2021/day/12) | 17.161 ms | 1.51 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day12.jl) |
-| 13 | [:white_check_mark:](https://adventofcode.com/2021/day/13) | 1.114 ms | 1.02 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day13.jl) |
-| 14 | [:white_check_mark:](https://adventofcode.com/2021/day/14) | 2.114 ms | 1.88 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day14.jl) |
-| 15 | [:white_check_mark:](https://adventofcode.com/2021/day/15) | 88.169 ms | 11.78 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day15.jl) |
-| 16 | [:white_check_mark:](https://adventofcode.com/2021/day/16) | 715.050 μs | 938.31 KiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day16.jl) |
-| 17 | [:white_check_mark:](https://adventofcode.com/2021/day/17) | 1.032 ms | 364.98 KiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day17.jl) |
-| 18 | [:white_check_mark:](https://adventofcode.com/2021/day/18) | 716.461 ms | 107.23 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day18.jl) |
-| 19 | [:white_check_mark:](https://adventofcode.com/2021/day/19) | 94.382 ms | 152.01 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day19.jl) |
-| 20 | [:white_check_mark:](https://adventofcode.com/2021/day/20) | 80.619 ms | 95.07 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day20.jl) |
-| 21 | [:white_check_mark:](https://adventofcode.com/2021/day/21) | 11.313 ms | 4.56 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day21.jl) |
-| 22 | [:white_check_mark:](https://adventofcode.com/2021/day/22) | 52.964 ms | 17.66 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day22.jl) |
-| 23 | [:white_check_mark:](https://adventofcode.com/2021/day/23) | 180.692 ms | 63.97 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day23.jl) |
-| 24 | [:white_check_mark:](https://adventofcode.com/2021/day/24) | 2.245 ms | 160.56 KiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day24.jl) |
-| 25 | [:white_check_mark:](https://adventofcode.com/2021/day/25) | 31.846 ms | 49.86 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day25.jl) |
+| 1 | [:white_check_mark:](https://adventofcode.com/2021/day/1) | 229.536 μs | 280.36 KiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day01.jl) |
+| 2 | [:white_check_mark:](https://adventofcode.com/2021/day/2) | 381.073 μs | 330.58 KiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day02.jl) |
+| 3 | [:white_check_mark:](https://adventofcode.com/2021/day/3) | 282.606 μs | 280.73 KiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day03.jl) |
+| 4 | [:white_check_mark:](https://adventofcode.com/2021/day/4) | 4.765 ms | 5.50 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day04.jl) |
+| 5 | [:white_check_mark:](https://adventofcode.com/2021/day/5) | 1.290 ms | 2.09 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day05.jl) |
+| 6 | [:white_check_mark:](https://adventofcode.com/2021/day/6) | 35.866 μs | 40.83 KiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day06.jl) |
+| 7 | [:white_check_mark:](https://adventofcode.com/2021/day/7) | 1.536 ms | 73.33 KiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day07.jl) |
+| 8 | [:white_check_mark:](https://adventofcode.com/2021/day/8) | 1.526 ms | 1.20 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day08.jl) |
+| 9 | [:white_check_mark:](https://adventofcode.com/2021/day/9) | 3.343 ms | 2.57 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day09.jl) |
+| 10 | [:white_check_mark:](https://adventofcode.com/2021/day/10) | 208.374 μs | 35.25 KiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day10.jl) |
+| 11 | [:white_check_mark:](https://adventofcode.com/2021/day/11) | 1.267 ms | 617.28 KiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day11.jl) |
+| 12 | [:white_check_mark:](https://adventofcode.com/2021/day/12) | 16.309 ms | 1.51 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day12.jl) |
+| 13 | [:white_check_mark:](https://adventofcode.com/2021/day/13) | 1.091 ms | 1.02 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day13.jl) |
+| 14 | [:white_check_mark:](https://adventofcode.com/2021/day/14) | 2.242 ms | 2.01 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day14.jl) |
+| 15 | [:white_check_mark:](https://adventofcode.com/2021/day/15) | 92.165 ms | 11.78 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day15.jl) |
+| 16 | [:white_check_mark:](https://adventofcode.com/2021/day/16) | 737.630 μs | 938.31 KiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day16.jl) |
+| 17 | [:white_check_mark:](https://adventofcode.com/2021/day/17) | 1.069 ms | 364.98 KiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day17.jl) |
+| 18 | [:white_check_mark:](https://adventofcode.com/2021/day/18) | 167.326 ms | 73.21 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day18.jl) |
+| 19 | [:white_check_mark:](https://adventofcode.com/2021/day/19) | 87.311 ms | 152.01 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day19.jl) |
+| 20 | [:white_check_mark:](https://adventofcode.com/2021/day/20) | 83.659 ms | 95.07 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day20.jl) |
+| 21 | [:white_check_mark:](https://adventofcode.com/2021/day/21) | 10.961 ms | 4.56 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day21.jl) |
+| 22 | [:white_check_mark:](https://adventofcode.com/2021/day/22) | 51.400 ms | 17.66 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day22.jl) |
+| 23 | [:white_check_mark:](https://adventofcode.com/2021/day/23) | 177.010 ms | 63.97 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day23.jl) |
+| 24 | [:white_check_mark:](https://adventofcode.com/2021/day/24) | 2.247 ms | 160.56 KiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day24.jl) |
+| 25 | [:white_check_mark:](https://adventofcode.com/2021/day/25) | 32.100 ms | 49.86 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day25.jl) |
 
 
 The benchmarks have been measured on this machine:
