@@ -291,41 +291,41 @@ end
 end
 
 @testset "Day 18" begin
-    expl1 = [[[[[9,8],1],2],3],4]
+    expl1 = AdventOfCode2021.Day18.parse_number("[[[[[9,8],1],2],3],4]")
     AdventOfCode2021.Day18.explode!(expl1)
-    @test expl1 == [[[[0,9],2],3],4]
+    @test repr(expl1) == "[[[[0,9],2],3],4]"
 
-    expl2 = [7,[6,[5,[4,[3,2]]]]]
+    expl2 = AdventOfCode2021.Day18.parse_number("[7,[6,[5,[4,[3,2]]]]]")
     AdventOfCode2021.Day18.explode!(expl2)
-    @test expl2 == [7,[6,[5,[7,0]]]]
+    @test repr(expl2) == "[7,[6,[5,[7,0]]]]"
 
-    expl3 = [[6,[5,[4,[3,2]]]],1]
+    expl3 = AdventOfCode2021.Day18.parse_number("[[6,[5,[4,[3,2]]]],1]")
     AdventOfCode2021.Day18.explode!(expl3)
-    @test expl3 == [[6,[5,[7,0]]],3]
+    @test repr(expl3) == "[[6,[5,[7,0]]],3]"
 
-    expl4 = [[3,[2,[1,[7,3]]]],[6,[5,[4,[3,2]]]]]
+    expl4 = AdventOfCode2021.Day18.parse_number("[[3,[2,[1,[7,3]]]],[6,[5,[4,[3,2]]]]]")
     AdventOfCode2021.Day18.explode!(expl4)
-    @test expl4 == [[3,[2,[8,0]]],[9,[5,[4,[3,2]]]]]
+    @test repr(expl4) == "[[3,[2,[8,0]]],[9,[5,[4,[3,2]]]]]"
 
-    expl5 = [[3,[2,[8,0]]],[9,[5,[4,[3,2]]]]]
+    expl5 = AdventOfCode2021.Day18.parse_number("[[3,[2,[8,0]]],[9,[5,[4,[3,2]]]]]")
     AdventOfCode2021.Day18.explode!(expl5)
-    @test expl5 == [[3,[2,[8,0]]],[9,[5,[7,0]]]]
+    @test repr(expl5) == "[[3,[2,[8,0]]],[9,[5,[7,0]]]]"
 
-    explsplit = [[[[[4,3],4],4],[7,[[8,4],9]]],[1,1]]
+    explsplit = AdventOfCode2021.Day18.parse_number("[[[[[4,3],4],4],[7,[[8,4],9]]],[1,1]]")
     AdventOfCode2021.Day18.explode!(explsplit)
-    @test explsplit == [[[[0,7],4],[7,[[8,4],9]]],[1,1]]
+    @test repr(explsplit) == "[[[[0,7],4],[7,[[8,4],9]]],[1,1]]"
     AdventOfCode2021.Day18.explode!(explsplit)
-    @test explsplit == [[[[0,7],4],[15,[0,13]]],[1,1]]
+    @test repr(explsplit) == "[[[[0,7],4],[15,[0,13]]],[1,1]]"
     AdventOfCode2021.Day18.split!(explsplit)
-    @test explsplit == [[[[0,7],4],[[7,8],[0,13]]],[1,1]]
+    @test repr(explsplit) == "[[[[0,7],4],[[7,8],[0,13]]],[1,1]]"
     AdventOfCode2021.Day18.split!(explsplit)
-    @test explsplit == [[[[0,7],4],[[7,8],[0,[6,7]]]],[1,1]]
+    @test repr(explsplit) == "[[[[0,7],4],[[7,8],[0,[6,7]]]],[1,1]]"
     AdventOfCode2021.Day18.explode!(explsplit)
-    @test explsplit == [[[[0,7],4],[[7,8],[6,0]]],[8,1]]
+    @test repr(explsplit) == "[[[[0,7],4],[[7,8],[6,0]]],[8,1]]"
 
-    explsplit = [[[[[4,3],4],4],[7,[[8,4],9]]],[1,1]]
+    explsplit = AdventOfCode2021.Day18.parse_number("[[[[[4,3],4],4],[7,[[8,4],9]]],[1,1]]")
     AdventOfCode2021.Day18.reduce!(explsplit)
-    @test explsplit == [[[[0,7],4],[[7,8],[6,0]]],[8,1]]
+    @test repr(explsplit) == "[[[[0,7],4],[[7,8],[6,0]]],[8,1]]"
 
     parse_input = AdventOfCode2021.Day18.parse_input
 
@@ -333,14 +333,14 @@ end
               "[2,2]\n" *
               "[3,3]\n" *
               "[4,4]\n"
-    @test AdventOfCode2021.Day18.build_sum(sample1 |> parse_input) == [[[[1,1],[2,2]],[3,3]],[4,4]]
+    @test AdventOfCode2021.Day18.build_sum(sample1 |> parse_input) |> repr == "[[[[1,1],[2,2]],[3,3]],[4,4]]"
 
     sample2 = "[1,1]\n" *
               "[2,2]\n" *
               "[3,3]\n" *
               "[4,4]\n" *
               "[5,5]\n"
-    @test AdventOfCode2021.Day18.build_sum(sample2 |> parse_input) == [[[[3,0],[5,3]],[4,4]],[5,5]]
+    @test AdventOfCode2021.Day18.build_sum(sample2 |> parse_input) |> repr == "[[[[3,0],[5,3]],[4,4]],[5,5]]"
 
     sample3 = "[1,1]\n" *
               "[2,2]\n" *
@@ -348,7 +348,7 @@ end
               "[4,4]\n" *
               "[5,5]\n" *
               "[6,6]\n"
-    @test AdventOfCode2021.Day18.build_sum(sample3 |> parse_input) == [[[[5,0],[7,4]],[5,5]],[6,6]]
+    @test AdventOfCode2021.Day18.build_sum(sample3 |> parse_input) |> repr == "[[[[5,0],[7,4]],[5,5]],[6,6]]"
 
     sample4 = "[[[0,[4,5]],[0,0]],[[[4,5],[2,6]],[9,5]]]\n" *
               "[7,[[[3,7],[4,3]],[[6,3],[8,8]]]]\n" *
@@ -360,14 +360,14 @@ end
               "[1,[[[9,3],9],[[9,0],[0,7]]]]\n" *
               "[[[5,[7,4]],7],1]\n" *
               "[[[[4,2],2],6],[8,7]]\n"
-    @test AdventOfCode2021.Day18.build_sum(sample4 |> parse_input) == [[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]
+    @test AdventOfCode2021.Day18.build_sum(sample4 |> parse_input) |> repr == "[[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]"
 
-    @test AdventOfCode2021.Day18.magnitude([[1,2],[[3,4],5]]) == 143
-    @test AdventOfCode2021.Day18.magnitude([[[[0,7],4],[[7,8],[6,0]]],[8,1]]) == 1384
-    @test AdventOfCode2021.Day18.magnitude([[[[1,1],[2,2]],[3,3]],[4,4]]) == 445
-    @test AdventOfCode2021.Day18.magnitude([[[[3,0],[5,3]],[4,4]],[5,5]]) == 791
-    @test AdventOfCode2021.Day18.magnitude([[[[5,0],[7,4]],[5,5]],[6,6]]) == 1137
-    @test AdventOfCode2021.Day18.magnitude([[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]) == 3488
+    @test AdventOfCode2021.Day18.magnitude(AdventOfCode2021.Day18.parse_number("[[1,2],[[3,4],5]]")) == 143
+    @test AdventOfCode2021.Day18.magnitude(AdventOfCode2021.Day18.parse_number("[[[[0,7],4],[[7,8],[6,0]]],[8,1]]")) == 1384
+    @test AdventOfCode2021.Day18.magnitude(AdventOfCode2021.Day18.parse_number("[[[[1,1],[2,2]],[3,3]],[4,4]]")) == 445
+    @test AdventOfCode2021.Day18.magnitude(AdventOfCode2021.Day18.parse_number("[[[[3,0],[5,3]],[4,4]],[5,5]]")) == 791
+    @test AdventOfCode2021.Day18.magnitude(AdventOfCode2021.Day18.parse_number("[[[[5,0],[7,4]],[5,5]],[6,6]]")) == 1137
+    @test AdventOfCode2021.Day18.magnitude(AdventOfCode2021.Day18.parse_number("[[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]]")) == 3488
 
     sample5 = "[[[0,[5,8]],[[1,7],[9,6]]],[[4,[1,2]],[[1,4],2]]]\n" *
               "[[[5,[2,8]],4],[5,[[9,9],0]]]\n" *
@@ -380,7 +380,7 @@ end
               "[[2,[[7,7],7]],[[5,8],[[9,3],[0,2]]]]\n" *
               "[[[[5,2],5],[8,[3,7]]],[[5,[7,5]],[4,4]]]\n"
     sample5sum = AdventOfCode2021.Day18.build_sum(sample5 |> parse_input)
-    @test sample5sum == [[[[6,6],[7,6]],[[7,7],[7,0]]],[[[7,7],[7,7]],[[7,8],[9,9]]]]
+    @test sample5sum |> repr == "[[[[6,6],[7,6]],[[7,7],[7,0]]],[[[7,7],[7,7]],[[7,8],[9,9]]]]"
     @test AdventOfCode2021.Day18.magnitude(sample5sum) == 4140
 
     sample6 = "[[[0,[5,8]],[[1,7],[9,6]]],[[4,[1,2]],[[1,4],2]]]\n" *
