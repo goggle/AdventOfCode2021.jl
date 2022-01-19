@@ -2,6 +2,7 @@ module Day23
 
 using AdventOfCode2021
 using DataStructures
+using StaticArrays
 
 struct State
     hallway::Int64
@@ -46,7 +47,7 @@ function get_room_entry(state::State, room::Integer, i::Integer)
     return (state.rooms >> (3*(room-1)*state.roomlength + 3*(i-1) + 2) & 1) << 2 + (state.rooms >> (3*(room-1)*state.roomlength + 3*(i-1) + 1) & 1) << 1 + (state.rooms >> (3*(room-1)*state.roomlength + 3*(i-1)) & 1)
 end
 
-function swap(state::State, i::T1, room::T2, j::T3) where {T1 <: Integer, T2 <: Integer, T3 <: Integer}
+function swap(state::State, i::Integer, room::Integer, j::Integer)
     hpos = 3 * (i - 1)
     rpos = 3 * (room - 1) * state.roomlength + 3 * (j - 1)
 
@@ -107,8 +108,8 @@ function transform_part2(state::State)
 end
 
 function next_states_and_costs(state::State)
-    add = [0, 0, 0, 0]  # how many entries from the start are set to 0
-    room_sorted = [true, true, true, true]
+    add = MVector{4,Int}(0, 0, 0, 0)  # how many entries from the start are set to 0
+    room_sorted = MVector{4,Bool}(true, true, true, true)
     room_entries = (3, 5, 7, 9)
     for room ∈ 1:4
         a = 0
