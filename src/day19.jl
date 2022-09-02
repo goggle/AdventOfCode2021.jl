@@ -64,7 +64,7 @@ function parse_input(input::String)
 end
 
 function find_neighbours(data::Vector{Matrix})
-    # Checks which scanner pairs overlap by calculating he Manhatten distances
+    # Checks which scanner pairs overlap by calculating the Manhatten distances
     # of beacons within in each scanner
     overlapping_neighbours = zeros(Bool, length(data), length(data))
     distances = Vector{UpperTriangular{Int, Matrix{Int}}}(undef, length(data))
