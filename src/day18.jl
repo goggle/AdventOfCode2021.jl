@@ -74,13 +74,13 @@ function explode!(root::SnailfishNumber)
     return explode!(root, root, root, Int[])
 end
 
-function explode!(root::SnailfishNumber, node::SnailfishNumber, parrent::SnailfishNumber, path::Vector{Int})
+function explode!(root::SnailfishNumber, node::SnailfishNumber, parent::SnailfishNumber, path::Vector{Int})
     depth = length(path)
     if depth >= 4 && isa(node[1], Int) && isa(node[2], Int)
         leftright = SnailfishNumber(node[1], node[2])
 
         # Replace node with 0:
-        parrent[path[end]] = 0
+        parent[path[end]] = 0
 
         # Add the left and right number to the correct node:
         for (i, j) in zip((1, 2), (2, 1))
