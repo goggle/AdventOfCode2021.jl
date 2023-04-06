@@ -7,7 +7,7 @@ function day11(input::String = readInput(joinpath(@__DIR__, "..", "data", "day11
 
     p1 = 0
     cmap = copy(energymap)
-    for i = 1:100
+    for i ∈ 1:100
         p1 += step!(cmap)
     end
 
@@ -37,10 +37,10 @@ end
 
 function increase_neighbours!(energymap::Matrix{Int}, ind::CartesianIndex{2})
     i, j = ind.I
-    for k = -1:1
-        for l = -1:1
+    for k ∈ -1:1
+        for l ∈ -1:1
             (k == l == 0 || !checkbounds(Bool, energymap, i + k, j + l)) && continue
-            energymap[i + k, j + l] += 1
+            energymap[i+k, j+l] += 1
         end
     end
 end
