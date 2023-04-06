@@ -27,11 +27,11 @@ end
 
 function won(board::Matrix{Int}, numbers::SubArray{Int, 1, Vector{Int}, Tuple{UnitRange{Int}}, true})
     n, m = size(board)
-    for i = 1:n
-        all(x -> x ∈ numbers, board[i,:]) && return true
+    for i ∈ 1:n
+        all(x -> x ∈ numbers, board[i, :]) && return true
     end
-    for j = 1:m
-        all(x -> x ∈ numbers, board[:,j]) && return true
+    for j ∈ 1:m
+        all(x -> x ∈ numbers, board[:, j]) && return true
     end
     return false
 end
