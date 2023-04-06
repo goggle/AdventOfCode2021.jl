@@ -10,7 +10,7 @@ struct Packet
 end
 
 function day16(input::String = readInput(joinpath(@__DIR__, "..", "data", "day16.txt")))
-    inpbits = vcat([BitVector(reverse(x)) for x in digits.(parse.(Int, split(rstrip(input), ""), base=16), base=2, pad=4)]...)
+    inpbits = vcat([BitVector(reverse(x)) for x in digits.(parse.(Int, split(rstrip(input), ""), base = 16), base = 2, pad = 4)]...)
     packets = Vector{Packet}()
     parse_packet!(packets, inpbits, 1)
     return [part1(packets[1]), part2(packets[1])]
@@ -49,7 +49,7 @@ function parse_packet!(packets::Vector{Packet}, inpbits::BitVector, i::Int)
             nos = _to_int(inpbits[i:i+10])
             i += 11
             p = Packet(version, id, lengthtypeid, Vector{Packet}())
-            for _ = 1:nos
+            for _ ∈ 1:nos
                 i = parse_packet!(p.subpackets, inpbits, i)
             end
             push!(packets, p)
