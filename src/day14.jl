@@ -12,8 +12,8 @@ end
 function solve(template, rules)
     elements = unique(vcat(collect(values(rules)), collect(template)))
     pairc = Dict{String, Int}()
-    for i ∈ 1:length(elements)
-        for j ∈ 1:length(elements)
+    for i ∈ eachindex(elements)
+        for j ∈ 1:eachindex(elements)
             pairc[join((elements[i], elements[j]))] = 0
         end
     end
