@@ -36,7 +36,7 @@ end
 function foldx!(points::Vector{CartesianIndex{2}}, fx::Int)
     for (i, point) in enumerate(points)
         if point[1] > fx
-            points[i] = CartesianIndex(2*fx - point[1], point[2])
+            points[i] = CartesianIndex(2 * fx - point[1], point[2])
         end
     end
     unique!(points)
@@ -45,7 +45,7 @@ end
 function foldy!(points::Vector{CartesianIndex{2}}, fy::Int)
     for (i, point) in enumerate(points)
         if point[2] > fy
-            points[i] = CartesianIndex(point[1], 2*fy - point[2])
+            points[i] = CartesianIndex(point[1], 2 * fy - point[2])
         end
     end
     unique!(points)
