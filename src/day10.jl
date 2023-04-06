@@ -30,14 +30,14 @@ function solve(lines)
         end
         if !invalid
             p2score = 0
-            for j = length(expected):-1:1
+            for j ∈ length(expected):-1:1
                 p2score *= 5
                 p2score += p2points[expected[j]]
             end
             push!(p2scores, p2score)
         end
     end
-    return [p1score, sort(p2scores)[length(p2scores) ÷ 2 + 1]]
+    return [p1score, sort(p2scores)[length(p2scores)÷2+1]]
 end
 
 end # module
