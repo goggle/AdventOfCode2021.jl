@@ -10,10 +10,10 @@ function day19(input::String = readInput(joinpath(@__DIR__, "..", "data", "day19
     inverse_rotations = [inv(rot) for rot ∈ rotations]
     overlapping_neighbours = find_neighbours(data)
     d = Dict{Int, Dict{Int, Tuple{Vector{Int}, Int}}}()
-    for i ∈ 1:length(data)
+    for i ∈ eachindex(data)
         d[i] = Dict{Int, Tuple{Vector{Int}, Int}}()
     end
-    for i ∈ 1:length(data)
+    for i ∈ eachindex(data)
         for j ∈ i+1:length(data)
             if overlapping_neighbours[i, j]
                 d[i][j] = compare(data[i], data[j], rotations)
@@ -70,7 +70,7 @@ function find_neighbours(data::Vector{Matrix})
     distances = Vector{UpperTriangular{Int, Matrix{Int}}}(undef, length(data))
     for (k, scannerdata) in enumerate(data)
         dist = UpperTriangular(zeros(Int, size(scannerdata, 2), size(scannerdata, 2)))
-        for i ∈ 1:size(scannerdata, 2)
+        for i ∈ axes(scannderdata, 2)
             for j ∈ i+1:size(scannerdata, 2)
                 dist[i, j] = abs.(scannerdata[:, i] - scannerdata[:, j]) |> sum
             end
