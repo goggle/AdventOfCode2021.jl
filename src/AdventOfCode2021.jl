@@ -40,7 +40,7 @@ for d in solvedDays
 end
 
 # Benchmark a list of different problems:
-function benchmark(days=solvedDays)
+function benchmark(days = solvedDays)
     results = []
     for day in days
         modSymbol = Symbol(@sprintf("Day%02d", day))
@@ -73,7 +73,7 @@ function generate_image(image)
     block = '\u2588'
     empty = ' '
     output = ""
-    for i = 1:size(image, 2)
+    for i ∈ 1:size(image, 2)
         row = join(image[:, i])
         row = replace(row, "#" => block)
         row = replace(row, "." => empty)
