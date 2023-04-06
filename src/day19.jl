@@ -10,15 +10,15 @@ function day19(input::String = readInput(joinpath(@__DIR__, "..", "data", "day19
     inverse_rotations = [inv(rot) for rot ∈ rotations]
     overlapping_neighbours = find_neighbours(data)
     d = Dict{Int, Dict{Int, Tuple{Vector{Int}, Int}}}()
-    for i = 1:length(data)
+    for i ∈ 1:length(data)
         d[i] = Dict{Int, Tuple{Vector{Int}, Int}}()
     end
-    for i = 1:length(data)
-        for j = i + 1:length(data)
-            if overlapping_neighbours[i,j]
+    for i ∈ 1:length(data)
+        for j ∈ i+1:length(data)
+            if overlapping_neighbours[i, j]
                 d[i][j] = compare(data[i], data[j], rotations)
                 invroti = findfirst(x -> x == inverse_rotations[d[i][j][2]], rotations)
-                d[j][i] = (-rotations[invroti]*d[i][j][1], invroti)
+                d[j][i] = (-rotations[invroti] * d[i][j][1], invroti)
             end
         end
     end
@@ -51,7 +51,7 @@ function parse_input(input::String)
     spinput = split(input, "\n")
     i = 1
     while i <= length(spinput)
-        tmp = Vector{SVector{3,Int}}()
+        tmp = Vector{SVector{3, Int}}()
         i += 1
         while spinput[i] != ""
             push!(tmp, parse.(Int, split(spinput[i], ",")))
@@ -70,17 +70,17 @@ function find_neighbours(data::Vector{Matrix})
     distances = Vector{UpperTriangular{Int, Matrix{Int}}}(undef, length(data))
     for (k, scannerdata) in enumerate(data)
         dist = UpperTriangular(zeros(Int, size(scannerdata, 2), size(scannerdata, 2)))
-        for i = 1:size(scannerdata, 2)
-            for j = i+1:size(scannerdata, 2)
-                dist[i, j] = abs.(scannerdata[:,i] - scannerdata[:,j]) |> sum
+        for i ∈ 1:size(scannerdata, 2)
+            for j ∈ i+1:size(scannerdata, 2)
+                dist[i, j] = abs.(scannerdata[:, i] - scannerdata[:, j]) |> sum
             end
         end
         distances[k] = dist
     end
-    for i = 1:length(data)
-        for j = i + 1: length(data)
+    for i ∈ 1:length(data)
+        for j ∈ i+1:length(data)
             if length(intersect(distances[i], distances[j])) >= 66
-                overlapping_neighbours[i,j] = overlapping_neighbours[j,i] = true
+                overlapping_neighbours[i, j] = overlapping_neighbours[j, i] = true
             end
         end
     end
@@ -88,21 +88,21 @@ function find_neighbours(data::Vector{Matrix})
 end
 
 function generate_rotations()
-    A = SMatrix{3,3}([0 0 -1; 0 1 0; 1 0 0])
-    B = SMatrix{3,3}([1 0 0; 0 0 -1; 0 1 0])
-    C = SMatrix{3,3}([0 -1 0; 1 0 0; 0 0 1])
-    return unique([A^i*B^j*C^k for i ∈ 0:3 for j ∈ 0:3 for k ∈ 0:3])
+    A = SMatrix{3, 3}([0 0 -1; 0 1 0; 1 0 0])
+    B = SMatrix{3, 3}([1 0 0; 0 0 -1; 0 1 0])
+    C = SMatrix{3, 3}([0 -1 0; 1 0 0; 0 0 1])
+    return unique([A^i * B^j * C^k for i ∈ 0:3 for j ∈ 0:3 for k ∈ 0:3])
 end
 
 function compare(orig::Matrix{Int}, other::Matrix{Int}, rotations::Vector{SMatrix{3, 3, Int, 9}})
     # Compares two scanners. If they overlap, the position of the second scanner and
     # the corresponding rotation index are returned.
-    for r = 1:length(rotations)
-        counts = Dict{SVector{3,Int}, Int}()
-        tmp = Set{SVector{3,Int}}()
-        for i = 1:size(orig, 2)
-            for j = 1:size(other, 2)
-                n = orig[:, i] - rotations[r] * other[:,j]
+    for r ∈ 1:length(rotations)
+        counts = Dict{SVector{3, Int}, Int}()
+        tmp = Set{SVector{3, Int}}()
+        for i ∈ 1:size(orig, 2)
+            for j ∈ 1:size(other, 2)
+                n = orig[:, i] - rotations[r] * other[:, j]
                 if n ∈ tmp
                     if !haskey(counts, n)
                         counts[n] = 2
@@ -120,8 +120,8 @@ function compare(orig::Matrix{Int}, other::Matrix{Int}, rotations::Vector{SMatri
 end
 
 function map_scanners(d::Dict{Int, Dict{Int, Tuple{Vector{Int}, Int}}}, rotations::Vector{SMatrix{3, 3, Int, 9}})
-    scanners = Dict{Int, Tuple{SVector{3,Int}, Int}}()
-    scanners[1] = ([0, 0, 0], findfirst(x -> x == [1 0 0 ; 0 1 0 ; 0 0 1], rotations))
+    scanners = Dict{Int, Tuple{SVector{3, Int}, Int}}()
+    scanners[1] = ([0, 0, 0], findfirst(x -> x == [1 0 0; 0 1 0; 0 0 1], rotations))
     done = Set{Int}([1])
     next = Int[]
     for (s, (loc, rotind)) in d[1]
