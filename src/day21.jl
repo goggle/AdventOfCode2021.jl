@@ -14,7 +14,7 @@ function part1(positions::Vector{Int})
     dice = 0
     dicerolls = 0
     while true
-        for i = 1:2
+        for i ∈ 1:2
             dicerolls += 3
             s = mod1(dice + 1, 100) + mod1(dice + 2, 100) + mod1(dice + 3, 100)
             dice = mod1(dice + 3, 100)
@@ -26,10 +26,10 @@ function part1(positions::Vector{Int})
 end
 
 function part2(positions::Vector{Int})
-    solve_part2!(Dict{NTuple{5,Int8},MVector{2,Int}}(), Int8(1), Int8(positions[1]), Int8(positions[2]), Int8(0), Int8(0)) |> maximum
+    solve_part2!(Dict{NTuple{5, Int8}, MVector{2, Int}}(), Int8(1), Int8(positions[1]), Int8(positions[2]), Int8(0), Int8(0)) |> maximum
 end
 
-function solve_part2!(lookup::Dict{NTuple{5,Int8},MVector{2,Int}}, pturn::Int8, p1pos::Int8, p2pos::Int8, p1score::Int8, p2score::Int8)
+function solve_part2!(lookup::Dict{NTuple{5, Int8}, MVector{2, Int}}, pturn::Int8, p1pos::Int8, p2pos::Int8, p1score::Int8, p2score::Int8)
     p1score >= 21 && return MVector(1, 0)
     p2score >= 21 && return MVector(0, 1)
     haskey(lookup, (pturn, p1pos, p2pos, p1score, p2score)) && return lookup[(pturn, p1pos, p2pos, p1score, p2score)]
