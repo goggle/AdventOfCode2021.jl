@@ -10,13 +10,13 @@ end
 
 function grow!(lookup::Matrix{Int}, state::Int, daysleft::Int)
     daysleft - state <= 0 && return 1
-    if lookup[6, daysleft - state] == 0
-        lookup[6, daysleft - state] = grow!(lookup, 6, daysleft - state - 1)
+    if lookup[6, daysleft-state] == 0
+        lookup[6, daysleft-state] = grow!(lookup, 6, daysleft - state - 1)
     end
-    if lookup[8, daysleft - state] == 0
-        lookup[8, daysleft - state] = grow!(lookup, 8, daysleft - state - 1)
+    if lookup[8, daysleft-state] == 0
+        lookup[8, daysleft-state] = grow!(lookup, 8, daysleft - state - 1)
     end
-    return lookup[6, daysleft - state] + lookup[8, daysleft - state]
+    return lookup[6, daysleft-state] + lookup[8, daysleft-state]
 end
 
 end # module
