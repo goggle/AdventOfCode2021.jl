@@ -9,14 +9,14 @@ function day17(input::String = readInput(joinpath(@__DIR__, "..", "data", "day17
 end
 
 function part1(target::Vector{Int})
-    solutions = Set{Tuple{Int,Int}}()
-    vxbounds = floor.(Int, -0.5 .+ sqrt.(2*target[1:2]) + [1, 0])
-    
+    solutions = Set{Tuple{Int, Int}}()
+    vxbounds = floor.(Int, -0.5 .+ sqrt.(2 * target[1:2]) + [1, 0])
+
     # Vertical drops:
-    for vx = vxbounds[1]:vxbounds[2]
+    for vx ∈ vxbounds[1]:vxbounds[2]
         vy = -1 - target[3]
         while vy > 0 # can we do better here?
-            n = 2*vy + 2
+            n = 2 * vy + 2
             while n * vy - n * (n - 1) ÷ 2 >= target[3]
                 if in_target(n, vx, vy, target)
                     push!(solutions, (vx, vy))
@@ -28,8 +28,8 @@ function part1(target::Vector{Int})
     end
 
     # Non-vertical drops:
-    for vx = floor(Int, -0.5 + sqrt(2*target[2] + 0.25))-1:target[2]
-        for vy = target[3]:-1-target[3]
+    for vx ∈ floor(Int, -0.5 + sqrt(2 * target[2] + 0.25))-1:target[2]
+        for vy ∈ target[3]:-1-target[3]
             n = 1
             while n * vx - n * (n - 1) ÷ 2 <= target[2] && n * vy - n * (n - 1) ÷ 2 >= target[3]
                 if in_target(n, vx, vy, target)
