@@ -8,12 +8,12 @@ function day12(input::String = readInput(joinpath(@__DIR__, "..", "data", "day12
 end
 
 function parse_input(input::String)
-    d = Dict{Int8,Vector{Int8}}()
+    d = Dict{Int8, Vector{Int8}}()
     links = split.(split(input), '-')
-    nodenames = sort(unique(reduce(vcat, links)), lt=_mylt)
+    nodenames = sort(unique(reduce(vcat, links)), lt = _mylt)
     lookup = Dict(map(x -> x[2] => islowercase(x[2][1]) && x[2] ∉ ("start", "end") ? Int8(-x[1] + 1) : Int8(x[1] - 1), enumerate(nodenames)))
     for link in links
-        for (i, j) = zip((1,2), (2,1))
+        for (i, j) ∈ zip((1, 2), (2, 1))
             left, right = lookup[link[i]], lookup[link[j]]
             left == 1 && continue
             right == 0 && continue
@@ -35,7 +35,7 @@ function _mylt(a, b)
     return a < b
 end
 
-function solve(links::Dict{Int8,Vector{Int8}})
+function solve(links::Dict{Int8, Vector{Int8}})
     npaths = Vector{Vector{Int}}([[0], [0]])
     walkp1!(npaths[1], Set{Int8}(), Int8(0), links)
     walkp2!(npaths[2], Set{Int8}(), Set{Int8}(), Int8(0), links)
