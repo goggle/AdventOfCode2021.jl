@@ -3,7 +3,7 @@ module Day03
 using AdventOfCode2021
 
 function day03(input::String = readInput(joinpath(@__DIR__, "..", "data", "day03.txt")))
-    numbers = parse.(Int, split(rstrip(input)), base=2)
+    numbers = parse.(Int, split(rstrip(input)), base = 2)
     gammarate = BitVector()
     i = 0
     while true
@@ -27,11 +27,11 @@ function day03(input::String = readInput(joinpath(@__DIR__, "..", "data", "day03
     oxyco2 = [0, 0]
     numbersc = [copy(numbers), copy(numbers)]
     cvals = [[1, 0], [0, 1]]
-    for j = 1:2
-        for k = i-1:-1:0
+    for j ∈ 1:2
+        for k ∈ i-1:-1:0
             shifted = mod.(numbersc[j] .>> k, 2)
             nones = count(x -> x == 1, shifted)
-            nzeros = count(x -> x == 0 , shifted)
+            nzeros = count(x -> x == 0, shifted)
             if nones >= nzeros
                 numbersc[j] = numbersc[j][findall(i -> i == cvals[j][1], shifted)]
             else
