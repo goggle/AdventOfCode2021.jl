@@ -3,8 +3,8 @@ module Day18
 using AdventOfCode2021
 
 mutable struct SnailfishNumber
-    left::Union{SnailfishNumber,Int}
-    right::Union{SnailfishNumber,Int}
+    left::Union{SnailfishNumber, Int}
+    right::Union{SnailfishNumber, Int}
 end
 
 function Base.show(io::IO, n::SnailfishNumber)
@@ -52,7 +52,7 @@ function day18(input::String = readInput(joinpath(@__DIR__, "..", "data", "day18
 end
 
 function parse_number(line::AbstractString)
-    splitted = map(x -> isnumeric(x[1]) ? parse(Int,x) : x[1], split(line,""))
+    splitted = map(x -> isnumeric(x[1]) ? parse(Int, x) : x[1], split(line, ""))
     return recparse(1, splitted)[2]
 end
 
@@ -87,7 +87,7 @@ function explode!(root::SnailfishNumber, node::SnailfishNumber, parent::Snailfis
             last = findlast(==(j), path)
             if last !== nothing
                 n = root
-                for i = 1:last-1
+                for i ∈ 1:last-1
                     n = n[path[i]]
                 end
                 if isa(n[i], Int)
@@ -127,7 +127,7 @@ function split!(node::SnailfishNumber)
         return true
     end
 
-    for i = 1:2
+    for i ∈ 1:2
         if !isa(node[i], Int)
             split!(node[i]) && return true
         end
@@ -170,10 +170,10 @@ end
 
 function part2(input::String)
     lines = split(rstrip(input), "\n")
-    splitted_lines = [map(x -> isnumeric(x[1]) ? parse(Int,x) : x[1], split(line,"")) for line in split(rstrip(input), "\n")]
+    splitted_lines = [map(x -> isnumeric(x[1]) ? parse(Int, x) : x[1], split(line, "")) for line in split(rstrip(input), "\n")]
     m = 0
-    for i = 1:length(lines)
-        for j = 1:length(lines)
+    for i ∈ 1:length(lines)
+        for j ∈ 1:length(lines)
             i == j && continue
             sn = SnailfishNumber(recparse(1, splitted_lines[i])[2], recparse(1, splitted_lines[j])[2])
             reduce!(sn)
