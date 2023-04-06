@@ -12,21 +12,21 @@ end
 function solve(template, rules)
     elements = unique(vcat(collect(values(rules)), collect(template)))
     pairc = Dict{String, Int}()
-    for i = 1:length(elements)
-        for j = 1:length(elements)
+    for i ∈ 1:length(elements)
+        for j ∈ 1:length(elements)
             pairc[join((elements[i], elements[j]))] = 0
         end
     end
 
     cdict = Dict(c => 0 for c in elements)
-    for i = 1:length(template) - 1
+    for i ∈ 1:length(template)-1
         pairc[template[i:i+1]] += 1
     end
 
     paircountsleftright = []
     leftmostpair = template[1:2]
     rightmostpair = template[end-1:end]
-    for i = 1:40
+    for i ∈ 1:40
         paircc = copy(pairc)
         pairc = Dict(x => 0 for x in keys(pairc))
         for (k, v) in paircc
