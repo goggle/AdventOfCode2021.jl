@@ -70,7 +70,7 @@ function find_neighbours(data::Vector{Matrix})
     distances = Vector{UpperTriangular{Int, Matrix{Int}}}(undef, length(data))
     for (k, scannerdata) in enumerate(data)
         dist = UpperTriangular(zeros(Int, size(scannerdata, 2), size(scannerdata, 2)))
-        for i ∈ axes(scannderdata, 2)
+        for i ∈ axes(scannerdata, 2)
             for j ∈ i+1:size(scannerdata, 2)
                 dist[i, j] = abs.(scannerdata[:, i] - scannerdata[:, j]) |> sum
             end
