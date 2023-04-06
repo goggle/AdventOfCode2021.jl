@@ -4,7 +4,7 @@ using AdventOfCode2021
 
 struct Cube
     on::Bool
-    data::NTuple{6,Int}
+    data::NTuple{6, Int}
 end
 
 function day22(input::String = readInput(joinpath(@__DIR__, "..", "data", "day22.txt")))
@@ -22,7 +22,7 @@ function parse_input(input::String)
     for line in split(rstrip(input), "\n")
         m = match(r, line)
         on = (m.captures[1] == "on" ? true : false)
-        push!(cubes, Cube(on, Tuple(parse.(Int, m.captures[2:7])))) 
+        push!(cubes, Cube(on, Tuple(parse.(Int, m.captures[2:7]))))
     end
     return cubes
 end
