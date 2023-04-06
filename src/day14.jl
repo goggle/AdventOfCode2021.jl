@@ -13,7 +13,7 @@ function solve(template, rules)
     elements = unique(vcat(collect(values(rules)), collect(template)))
     pairc = Dict{String, Int}()
     for i ∈ eachindex(elements)
-        for j ∈ 1:eachindex(elements)
+        for j ∈ eachindex(elements)
             pairc[join((elements[i], elements[j]))] = 0
         end
     end
