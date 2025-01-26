@@ -43,14 +43,6 @@ function get_hallway_entry(state::State, i::Integer)
     return (state.hallway >> (3 * (i - 1))) & 0x7
 end
 
-# function get_hallway_entry(state::State, i::Integer)
-#     return (state.hallway >> (3 * (i - 1) + 2) & 1) << 2 + (state.hallway >> (3 * (i - 1) + 1) & 1) << 1 + (state.hallway >> (3 * (i - 1)) & 1)
-# end
-
-# function get_room_entry(state::State, room::Integer, i::Integer)
-#     return (state.rooms >> (3 * (room - 1) * state.roomlength + 3 * (i - 1) + 2) & 1) << 2 + (state.rooms >> (3 * (room - 1) * state.roomlength + 3 * (i - 1) + 1) & 1) << 1 + (state.rooms >> (3 * (room - 1) * state.roomlength + 3 * (i - 1)) & 1)
-# end
-
 function get_room_entry(state::State, room::Integer, i::Integer)
     pos = 3 * ((room - 1) * state.roomlength + (i - 1))
     return (state.rooms >> pos) & 0x7
