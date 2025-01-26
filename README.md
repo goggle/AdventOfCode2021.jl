@@ -31,7 +31,7 @@ This Julia package contains my solutions for [Advent of Code 2021](https://adven
 | 20 | [:white_check_mark:](https://adventofcode.com/2021/day/20) | 83.659 ms | 95.07 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day20.jl) |
 | 21 | [:white_check_mark:](https://adventofcode.com/2021/day/21) | 10.961 ms | 4.56 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day21.jl) |
 | 22 | [:white_check_mark:](https://adventofcode.com/2021/day/22) | 51.400 ms | 17.66 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day22.jl) |
-| 23 | [:white_check_mark:](https://adventofcode.com/2021/day/23) | 172.330 ms | 56.06 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day23.jl) |
+| 23 | [:white_check_mark:](https://adventofcode.com/2021/day/23) | 145.604 ms | 44.15 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day23.jl) |
 | 24 | [:white_check_mark:](https://adventofcode.com/2021/day/24) | 2.247 ms | 160.56 KiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day24.jl) |
 | 25 | [:white_check_mark:](https://adventofcode.com/2021/day/25) | 32.100 ms | 49.86 MiB | [:white_check_mark:](https://github.com/goggle/AdventOfCode2021.jl/blob/master/src/day25.jl) |
 

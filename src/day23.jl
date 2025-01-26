@@ -40,41 +40,41 @@ function init_state(hallway::Vector{T}, rooms::Vector{Vector{S}}) where {T <: In
 end
 
 function get_hallway_entry(state::State, i::Integer)
-    return (state.hallway >> (3 * (i - 1) + 2) & 1) << 2 + (state.hallway >> (3 * (i - 1) + 1) & 1) << 1 + (state.hallway >> (3 * (i - 1)) & 1)
+    return (state.hallway >> (3 * (i - 1))) & 0x7
 end
 
+# function get_hallway_entry(state::State, i::Integer)
+#     return (state.hallway >> (3 * (i - 1) + 2) & 1) << 2 + (state.hallway >> (3 * (i - 1) + 1) & 1) << 1 + (state.hallway >> (3 * (i - 1)) & 1)
+# end
+
+# function get_room_entry(state::State, room::Integer, i::Integer)
+#     return (state.rooms >> (3 * (room - 1) * state.roomlength + 3 * (i - 1) + 2) & 1) << 2 + (state.rooms >> (3 * (room - 1) * state.roomlength + 3 * (i - 1) + 1) & 1) << 1 + (state.rooms >> (3 * (room - 1) * state.roomlength + 3 * (i - 1)) & 1)
+# end
+
 function get_room_entry(state::State, room::Integer, i::Integer)
-    return (state.rooms >> (3 * (room - 1) * state.roomlength + 3 * (i - 1) + 2) & 1) << 2 + (state.rooms >> (3 * (room - 1) * state.roomlength + 3 * (i - 1) + 1) & 1) << 1 + (state.rooms >> (3 * (room - 1) * state.roomlength + 3 * (i - 1)) & 1)
+    pos = 3 * ((room - 1) * state.roomlength + (i - 1))
+    return (state.rooms >> pos) & 0x7
 end
 
 function swap(state::State, i::Integer, room::Integer, j::Integer)
     hpos = 3 * (i - 1)
-    rpos = 3 * (room - 1) * state.roomlength + 3 * (j - 1)
-
-    hallway = state.hallway
-    rooms = state.rooms
-    for k ∈ 0:2
-        hallway_bit = (state.hallway >> (hpos + k)) & 1
-        room_bit = (state.rooms >> (rpos + k)) & 1
-        hallway_bit == room_bit && continue
-        hallway = (1 << (hpos + k)) ⊻ hallway
-        rooms = (1 << (rpos + k)) ⊻ rooms
-    end
-    return State(hallway, rooms, state.roomlength)
+    rpos = 3 * ((room - 1) * state.roomlength + (j - 1))
+    mask_h = (state.hallway >> hpos) & 0x7
+    mask_r = (state.rooms >> rpos) & 0x7
+    delta = mask_h ⊻ mask_r
+    new_hallway = state.hallway ⊻ (delta << hpos)
+    new_rooms = state.rooms ⊻ (delta << rpos)
+    return State(new_hallway, new_rooms, state.roomlength)
 end
 
 function swap(state::State, i::Integer, room1::Integer, j::Integer, room2::Integer)
-    r1pos = 3 * (room1 - 1) * state.roomlength + 3 * (i - 1)
-    r2pos = 3 * (room2 - 1) * state.roomlength + 3 * (j - 1)
-    rooms = state.rooms
-    for k ∈ 0:2
-        r1bit = (state.rooms >> (r1pos + k)) & 1
-        r2bit = (state.rooms >> (r2pos + k)) & 1
-        r1bit == r2bit && continue
-        mask = 1 << (r1pos + k) | 1 << (r2pos + k)
-        rooms = rooms ⊻ mask
-    end
-    return State(state.hallway, rooms, state.roomlength)
+    r1pos = 3 * ((room1 - 1) * state.roomlength + (i - 1))
+    r2pos = 3 * ((room2 - 1) * state.roomlength + (j - 1))
+    mask1 = (state.rooms >> r1pos) & 0x7
+    mask2 = (state.rooms >> r2pos) & 0x7
+    delta = mask1 ⊻ mask2
+    new_rooms = state.rooms ⊻ (delta << r1pos) ⊻ (delta << r2pos)
+    return State(state.hallway, new_rooms, state.roomlength)
 end
 
 function day23(input::String = readInput(joinpath(@__DIR__, "..", "data", "day23.txt")))
@@ -107,10 +107,9 @@ function transform_part2(state::State)
     return init_state([get_hallway_entry(state, i) for i ∈ 1:11], rooms)
 end
 
-function next_states_and_costs(state::State)
+function next_states_and_costs(state::State, room_entries::NTuple{4,Int})
     add = MVector{4, Int}(0, 0, 0, 0)  # how many entries from the start are set to 0
     room_sorted = MVector{4, Bool}(true, true, true, true)
-    room_entries = (3, 5, 7, 9)
     for room ∈ 1:4
         a = 0
         while a + 1 <= state.roomlength && get_room_entry(state, room, a + 1) == 0
@@ -208,11 +207,11 @@ function solve(state::State, goal::State, h)
     queue[state] = 0
 
     # camefrom = Dict{State,State}()
-
+    room_entries = (3, 5, 7, 9)
     while !isempty(queue)
         current = dequeue!(queue)
         current == goal && break
-        for (neighbour, cost) ∈ next_states_and_costs(current)
+        for (neighbour, cost) ∈ next_states_and_costs(current, room_entries)
             ndist = dist[current] + cost
             if ndist < dist[neighbour]
                 dist[neighbour] = ndist
